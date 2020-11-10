@@ -1,0 +1,246 @@
+Introduction
+
+Exercise - Weighted Graphs
+
+Solution - Weighted Graphs
+
+An object-oriented solution
+
+Dijkstra's Shortest Path Algorithm
+
+Exercise - Getting the shortest distance
+
+solution - the shortest distance
+
+solution - shortest path
+
+exercise - cycle detection (undirected graphs)
+
+solution - cycle detection (undirected graphs)
+
+minimum spanning tree
+
+Exercise - Prim's algorithm
+
+solution - prim's algorithm
+
+course wrap up
+
+/* ---------------
+
+Introduction
+
+Exercise - Weighted Graphs
+
+  If the edges of our graphs have weights,
+  then we have a weighted graph.
+
+  The numberings/weights can represent
+  cost, distance, complexity, etc.
+
+  A common application for weighted
+  graphs is finding the shortest path
+  between two nodes.
+
+  Consider them to be areas in a city,
+  weights represent the traffic conditions
+  and times.
+
+  Create a class
+
+  WeightedGraph
+    private Node class
+    private Edge class
+      from (Node)
+      to (Node)
+      weight (int)
+
+    //methods
+    -
+    addNode()
+    addEdge(from, to, weight)
+
+    // make it an undirected graph
+    // edge to and from
+
+  My implementation in C#
+  -
+
+
+
+Solution - Weighted Graphs
+  // rewatch from 2 min on
+
+  Mosh's solution
+  -
+  public class WeightedGraph {
+
+    private Map<String, Node> nodes = new HashMap<>(); // stores the nodes
+
+    // previously we are mapping our node to a list of nodes
+    // private Map<Node, List<Node>> adjacencyList = new Map<Node, List<Node>>
+
+    // but now we are mapping our nodes to a list of edges
+    private Map<Node, List<Edge>> adjacencyList = new HashMap<>();
+
+    public void addNode(String label) {
+      var node = new Node(label);
+      nodes.putIfAbsent(label, node);
+      adjacencyList.putIfAbsent(node, new ArrayList<>());
+    }
+
+    public void addEdge(String from, String to, int weight) {
+      var fromNode = nodes.get(from);
+      if (fromNode == null)
+        throw new IllegalArgumentException();
+
+      var toNode = nodes.get(to);
+      if (toNode == null)
+        throw new IllegalArgumentException();
+
+      // so this is how we add an edge
+      adjacencyList.get(fromNode).add(new Edge(fromNode, toNode, weight));
+      // we are making it an undirected graph
+      adjacencyList.get(toNode).add(new Edge(toNode, fromNode, weight));
+    }
+
+    private class Node {
+      private String label;
+
+      public Node(String label) { this.label = label; }
+
+      @Override
+      public String toString() { return label; }
+    }
+
+    private class Edge {
+      private Node from;
+      private Node to;
+      private int weight;
+
+      public Edge(Node from, Node to, int weight) {
+        this.from = from;
+        this.to = to;
+        this.weight = weight;
+      }
+
+      @Override
+      public String toString() {
+        return from + "->" + to; // A->B
+      }
+    }
+  }
+
+  // test
+
+  public class Main {
+    public static void main(String[] names) {
+      var graph = new WeightedGraph();
+      graph.addNode("A");
+      graph.addNode("B");
+      graph.addNode("C");
+      graph.addEdge("A", "B", 3);
+      graph.addEdge("A", "C", 2);
+      graph.print();
+    }
+  }
+
+An object-oriented solution
+
+  The concept of a node and edge
+  are tightly related.
+
+  Note that the current implementation
+  requires that we look up a string
+  in the hash table.
+  Then have to search the second hash table
+  to find the edges of that node.
+
+  Instead have each Node store its edges.
+
+  So get rid of
+
+  private Map<Node, List<Edge>> adjacencyList = new HashMap<>();
+
+  -
+
+  in Node class, which is within WeightedGraph class
+
+  private class Node {
+    private String label;
+    // add new field
+    // it could also have been a Map list (HashMap)
+    // for faster access
+    private List<Edge> edges = new ArrayList<>();
+
+    public Node(String label) { this.label = label; }
+
+    @Override
+    public String toString() { return label; }
+
+    public void addEdge(Node to, int weight) {
+      edges.add(new Edge(this, to, weight));
+    }
+
+    public List<Edge> getEdges() {
+      // if edges were a hash table,
+      // then we could call edges.values()
+      // as to convert that has table
+      // to a list
+      return edges;
+    }
+
+  }
+
+  ---
+
+
+  public void addNode(String label) {
+    // The node already initializes it's edges
+    // to a new ArrayList
+    nodes.putIfAbsent(label, new Node(label));
+  }
+
+  public void addEdge(String from, String to, int weight) {
+    var fromNode = nodes.get(from);
+    if (fromNode == null)
+      throw new IllegalArgumentException();
+
+    var toNode = nodes.get(to);
+    if (toNode == null)
+      throw new IllegalArgumentException();
+
+    fromNode.addEdge(toNode, weight);
+    toNode.addEdge(fromNode, weight);
+  }
+
+  public void print() {
+    for (var node : nodes.values()) {
+      // get the neighbors
+      var edges = node.getEdges();
+      if (!edges.isEmpty())
+        System.out.println(node + " is connected to " + edge);
+    }
+  }
+
+Dijkstra's Shortest Path Algorithm
+
+
+
+Exercise - Getting the shortest distance
+
+solution - the shortest distance
+
+solution - shortest path
+
+exercise - cycle detection (undirected graphs)
+
+solution - cycle detection (undirected graphs)
+
+minimum spanning tree
+
+Exercise - Prim's algorithm
+
+solution - prim's algorithm
+
+course wrap up

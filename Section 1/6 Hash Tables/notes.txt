@@ -1,0 +1,694 @@
+Introduction
+
+What are Hash Tables
+
+Working with Hash Tables
+
+Exercise - Finding the first non-repeated character
+
+solution - first non-repeating character
+
+sets
+
+exercise - first repeated character
+
+solution - first repeated character
+
+hash functions
+
+collisions
+
+chaining
+
+open addressing - linear probing
+
+open addressing - quadratic probing
+
+open addressing - double hashing
+
+exercise - build a HashTable
+
+solution - put()
+
+solution - get()
+
+solution - remove()
+
+solution - refactoring
+
+hash tables - exercises
+
+/* --------------
+
+Overview questions
+
+
+
+
+
+
+
+
+-------
+
+Introduction
+
+  Fast lookup and can be used
+  to optimize many algorithms.
+
+What are Hash Tables
+
+  Applications of hash tables
+  - spell checkers
+  - dictionaries
+  - compilers
+  - code editors
+
+  // They have different names
+  // in different languages.
+
+  Java       => HashMap
+  JavaScript => Object
+  Python     => Dictionary
+  C#         => Dictionary
+
+  Basically they store key value pairs.
+
+  Ex:
+  employeeNumber -> employee
+
+  So we take the
+  employeeNumber
+    -> pass to hash function
+    -> output is the address
+      for the index
+
+  The hash function is
+  deterministic.
+
+  // same input will produce the same output
+
+  This enables the hash function to
+  be used for both storing
+  and retrieving values.
+
+  Internally a hash map uses an array
+  to store its data.
+
+  Operations
+  - insert
+  - lookup
+  - delete
+
+  // all are generally accepted as O(1)
+
+  worst case is O(n)
+
+
+Working with Hash Tables
+
+  Java map interface
+
+  A contract that map data structures
+  should provide.
+
+
+  Most of the time will use
+  HashMap.
+
+  // Hashtable is legacy
+
+  ConcurrentHashMap used for
+  multithreaded Applications.
+
+
+  import java.util.Map;
+
+  public class Main {
+    public static void main(String[] args) {
+      Map<Integer, String> map = new HashMap<>();
+      // so Map is an interface
+      // and on right side, HashMap
+        // is an implementation of this interface
+
+      map.put(1, "Steven");
+      map.put(2, "John");
+      System.out.println(map);
+    }
+  }
+
+  In HashMaps we cannot have duplicate keys,
+  so they will override.
+
+  map.remove(1);
+
+
+  // to check for the existence of a value
+  var value = map.get(3);
+
+
+  // return boolean
+  map.containsKey(3); // O(1)
+  map.containsValue("Steven"); // O(n)
+
+
+  To iterate over hash maps.
+
+  We have useful methods from Map interface,
+
+  entrySet()
+    => returns a list of key value pairs
+
+  keySet()
+    => returns a list of keys
+
+
+  for (var item: map.keySet()) {
+    System.out.println(item);
+  }
+
+
+
+  for (var item: map.entrySet()) {
+    System.out.println(item.getKey());
+    System.out.println(item.getValue());
+  }
+
+
+Exercise - Finding the first non-repeated character
+
+  Popular interview question.
+
+  public static void main(String[] args) {
+
+  }
+
+  // code is found in java file
+  HashMapNonRepeatingChar.java
+
+
+solution - first non-repeating character
+
+  Mosh's implementation
+
+
+  public char findFirstNonRepeatingChar(String str) {
+    Map<Character, Integer> map = new HashMap<>();
+
+    // to iterate over a string in java,
+    // we must convert it to a character array
+    // in order to make it iterable
+    for (var ch : str.toCharArray()) {
+      if (map.containsKey(ch)) {
+        var count = map.get(ch);
+        map.put(ch, count);
+      } else {
+        map.put(ch, 1);
+      }
+    }
+  }
+
+  can improve this code
+
+  public char findFirstNonRepeatingChar(String str) {
+    Map<Character, Integer> map = new HashMap<>();
+    var chars = str.toCharArray();
+
+    for (var ch : chars) {
+      // use the ternary operator
+      // when assigning a value based
+      // on a conditional
+      var count = map.containsKey(ch) ? map.get(ch) : 0;
+      map.put(ch, count + 1);
+    }
+
+    for (var ch : chars) {
+      if (map.get(ch) == 1)
+        return ch;
+    }
+
+    // so this returns a character
+    // data type of null
+    return Character.MIN_VALUE;
+  }
+
+
+  So the hash function determines
+  where items should be inserted.
+
+  So they are not inserted sequentially.
+
+
+sets
+
+  So the set data structure is similar
+  to a hash map but slightly different.
+
+  Maps: keys -> v
+
+  Sets: keys
+
+  So sets only have keys and don't
+  have values.
+
+
+  Sets are useful since they don't
+  allow duplicate keys.
+
+  // so ensure a unique list
+
+  -
+
+  Java has a generic interface for Set
+
+  The most commonly used implementation
+  is HashSet.
+
+
+  Set<Integer> set = new HashSet<>();
+  int[] numbers = { 1, 2, 3, 3, 2, 1 };
+  for (var number : numbers) {
+    set.add(number);
+  }
+  System.out.println(set);
+
+
+  // can get the size of a set,
+  // can clear it, or iterate
+  // over it
+
+exercise - first repeated character
+
+  string is
+  green apple
+
+  FIND the first repeated char
+
+  my code:
+
+  public char firstRepeatingChar(string str) {
+    Set<Character> set = new HashSet<>();
+    char[] chars = str.toCharArray();
+    for (var char : chars) {
+      if (chars.contains(char)) {
+        return char;
+      }
+      set.add(char);
+    }
+    return Character.MIN_VALUE;
+  }
+
+
+solution - first repeated character
+
+  // same solution
+
+hash functions
+
+  So analyze how hash functions
+  work internally
+  and why there are fast.
+
+  So when calling .put()
+  The HashMap gets the key and
+  uses its value to determine
+  where to store its value in memory.
+
+  It maps it to an index value
+  in an array.
+
+  A hash function gets a value
+  and maps it to a hash code
+  // or hash code digest.
+
+  It uses the modules operator
+  to ensure that the index
+  is within the array size.
+
+  So a basic implementation of this
+  just for demonstration.
+
+  public static int hash(int number, int arraySize) {
+    return number % arraySize;
+  }
+
+  But what if key is a string?
+
+  How to convert to an index?
+
+  NOTE: Every character is represented
+  internally as a number.
+
+  So get the numeric representation
+  of the number, sum them,
+  and will then have a big number
+  that you can perform modules on.
+
+  Ex:
+
+  public static int hash(String key, int arraySize) {
+    int hash = 0;
+    for (var ch : keys.toCharArray()) {
+      // so augmented assignment
+      // will automatically
+      // convert to an integer
+      // due to implicit casting
+      hash += ch;
+    }
+    return hash % arraySize;
+  }
+
+  These are simplified versions
+  of a hash function implementations
+  as there are many
+  algorithms to perform this.
+
+  Cryptography for example,
+  generating a long complicated string,
+
+  In Java, every object
+  has a method,
+  hasCode()
+
+  Ex:
+    String s = "";
+    s.hashCode();
+    // it'll convert the object
+    // into a hash value
+
+
+collisions
+
+  When generating hash values,
+  it's possible that two distinct
+  keys could map to the same index address.
+
+  There are two ways to handle collisions.
+
+  Have each cell in our array point to a
+  linked list.
+
+  So instead of storing the values themselves,
+  you store a reference to a node.
+
+  Simply add to the end.
+
+  // this is chaining
+
+
+  -
+  The other way to handle a collision
+  is to find another open slot to
+  store the value.
+
+  // this is known as open addressing
+
+
+  So in summary
+  to handle collisions
+
+  - chaining
+  - open addressing
+
+
+chaining
+
+  Refer to the cells or elements
+  of an array as
+  buckets/slots.
+
+  Wrap the value in a Linked List node.
+
+
+open addressing - linear probing
+
+  In this implementation,
+  we store values directly in
+  slots.
+
+  Probing means searching.
+
+  There are 3 searching/probing algorithms.
+    - linear probing
+    - quadratic probing
+    - double hashing
+
+  linear Probing
+
+  Start from calculated index and continue
+  iterating through array until find
+  an empty slot.
+
+  If can't find an empty slot,
+  // this is a drawback of using the
+  // open addressing strategy
+
+  as must create a new table
+  with an updated size.
+
+  Then must re-insert all the key-> value pairs.
+
+  Linear probing: hash(key) + i
+
+  So i acts like a loop variable.
+
+  Need to use modules to ensure that
+  the index value is always within
+  the bounds of the inner array.
+
+  There's a problem with linear probing.
+
+
+  The storing of items is likely to
+  form a cluster.
+
+  // So every key-> value pair
+  // added takes longer
+  // as must probe/search longer
+  // for an empty slot.
+
+  The cluster then just becomes bigger
+  and ruins the performance
+  of our hash table.
+
+
+open addressing - quadratic probing
+
+  This probing algorithms
+  attempts to solve the problem
+  of clustering.
+
+  Linear probing algorithm
+
+    hash(key) + i
+      % table_size
+
+  Quadratic probing algorithm
+
+    hash(key) + i^2
+      % table_size
+
+
+  So now key -> value pairs
+  will be spread out more widely.
+
+  In both algorithms you
+  MUST always
+  perform modules of the table size.
+
+
+  Since performing big jumps,
+  may end up in an infinite loop.
+
+open addressing - double hashing
+
+  This solves the problem of infinite
+  loops so
+  instead of using i or i^2
+
+  We use a separate, independent,
+  hash function
+  to calculate.
+
+
+  Doubling hashing
+    // popular
+
+    hash2(key) = prime - (key % prime)
+
+
+
+  The prime number must be
+  smaller than the size of our table.
+
+
+  So to calculate the index based on
+  the double hasing algorithm.
+
+  (hash1(key) + i * hash2(key)) % table_size
+
+  Break this down.
+
+  (hash1(key)) => generate the hash code
+
+  i * hash2(key) => calculate the iteration steps
+
+    // THIS is where i or i^2 would have been
+
+
+    The only different here is that we are doing
+
+    i * hash2
+
+    Linear: i
+    quadratic: i^2
+    double: i * hash2
+
+
+  -
+  An overview
+
+  // with a table size of 5
+
+  hash1(key) = key % table_size
+
+  hash2(key) = 3 - (key % 3)
+
+  index = (hash1 + i * hash2) % value
+
+
+
+  // i will be incremented
+  // until an empty slot if found.
+
+  So the key->value pairs
+  will now be spread out.
+
+
+exercise - build a HashTable
+
+  HashTable
+    put(k, v)
+    get(k): v
+    remove(k)
+
+    k: integer
+    v: string
+    Collisions: chaining
+
+  We are storing both the key
+  and value together.
+
+  We are storing both the key
+  and value together in our hash table.
+
+  So a private class,
+  KeyValuePair which would wrap
+  the key and value pairs as instance variables.
+
+
+  LinkedList[]
+
+  [LL, LL, LL]
+  // SO every element is a linked list
+
+
+  NOTE: That in Java,
+    LinkedList is a generic class.
+
+    So must specify
+
+    LinkedList<Entry>[]
+
+
+
+solution - put()
+
+  public class HashTable {
+    private class Entry {
+      private int key;
+      private String value;
+
+      public Entry(int key, String value) {
+        this.key = key;
+        this.value = value;
+      }
+    }
+
+    private LinkedList<Entry>[] entries = new LinkedList[10];
+
+    public void put(int key, String value) {
+      var index = hash(key);
+      if (entries[index] == null)
+        entries[index] = new LinkedList<>();
+
+      var bucket = entries[index];
+      var entry = new Entry(key, value);
+
+      // we want to avoid duplicates,
+      // so must first iterate
+      for (var entry : bucket) {
+        if (entry.key == key) {
+          // update the value
+          entry.value = value;
+          return;
+        }
+      }
+      bucket.addLast(entry);
+    }
+
+    private int hash(int key) {
+      // may want to use Math.abs()
+      // to ensure it's positive
+      return key % entries.length;
+    }
+  }
+
+solution - get()
+
+
+  public String get(int key) {
+    var index = hash(key);
+    var bucket = entries[index];
+    if (bucket != null) {
+      for (var entry : bucket) {
+        if (entry.key == key) {
+          return entry.value;
+        }
+      }
+    }
+    return null;
+  }
+
+solution - remove()
+
+  public void remove(int key) {
+      int index = hash(key);
+      var bucket = entries[index];
+      if (bucket == null)
+          throw new IllegalStateException();
+      for (var entry : bucket ) {
+          if (entry.key == key) {
+              bucket.remove(entry);
+              return;
+          }
+      }
+      throw new IllegalStateException();
+  }
+
+solution - refactoring
+
+  Refactoring is a creative process since developers
+  refactor differently.
+
+  Should have automated test before you refactor your code.
+
+hash tables - exercises
+
+
+Summary
+
+  Hash tables
+
+    * to store key/value pairs
+    * insert, remove, lookup run in O(1)

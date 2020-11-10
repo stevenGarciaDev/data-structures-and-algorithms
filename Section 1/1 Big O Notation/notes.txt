@@ -1,0 +1,109 @@
+Introduction
+
+What is Big O
+
+O(1)
+
+O(n)
+
+O(n^2)
+
+O(logn)
+
+O(2^n)
+
+Space Complexity
+
+/* --------------
+
+Introduction
+
+  Linear data structures
+
+What is Big O
+
+  => used to describe the performance of
+  an algorithm.
+
+  How does the algorithm perform
+  as the input increases really large?
+
+  The cost/performance of an operation
+  is largely dependent on
+  the data structure that you use.
+
+
+O(1)
+
+  public void log(int[] numbers) {
+    System.out.println(numbers[0]);
+  }
+
+
+  The performance of this operation
+  doesn't increase as the size
+  of the array grows.
+
+  So time complexity shows
+  how the algorithm slows down as
+  the input grows.
+
+O(n)
+
+  public void log(int[] numbers) {
+    for (int i = 0; i < numbers.length; i++) {
+      System.out.println(numbers[i]);
+    }
+  }
+
+  the size of the input
+  directly relates to the performance
+
+
+O(n^2)
+
+  nested for loops
+
+O(log n)
+
+  Logarithmic,
+
+  example is binary search,
+  each iteration
+  is over a data set
+  that's about half the previous size
+
+  ex:
+    in binary search
+
+    1 M items => max 19 comparisons
+
+
+  // reduce our work in half by every set
+
+O(2^n)
+
+  exponential growth
+  // opposite of Logarithmic
+
+
+
+Space Complexity
+
+  often must make a tradeoff between
+  saving time or saving space
+
+
+  Must consider your environment
+  as the best solution depends on
+  your platform that you are developing on.
+
+
+  consider
+
+  the space you must allocate relative to
+  the size of the input
+    -> that's the space complexity
+
+  // we don't count the size of the input because
+  // that's always n

@@ -1,0 +1,595 @@
+Introduction
+
+What are Tries
+
+Exercise - Populating a Trie
+
+Exercise - Building a Trie
+
+Solution - Building a Trie
+
+An implementation with a HashTable
+
+A Better Abstraction
+
+Exercise - Looking up a word
+
+Solution - Looking up a word
+
+Traversals
+
+Exercise - Removing a Word
+
+Solution - Removing a Word
+
+Exercise - Auto Completion
+
+Solution - Auto Completion
+
+Tries - Exercises
+
+/* --------------
+
+Introduction
+
+  Often used in interviews.
+
+  // they are used for auto completion
+
+What are Tries
+
+  Tries are a kind of trees.
+  // they are not binary trees
+
+  Each node can have several child nodes.
+
+  So trie, comes from the word 'retrieval'
+
+  // other names are
+  digital, radix, prefix
+
+  Consider how Google does autocompletion
+  for your searches.
+
+  In you were to use an array data structure,
+  this would be slow since many
+  words have the same prefix.
+
+
+  We use tries,
+  as they allow us to store
+  millions of words in minimal space
+  and provide really fast lookups.
+
+  Ex:
+
+                  ()
+                /    \
+              B       C
+            /   \       \
+          A      O       A
+        /        /        \
+        G       Y           T
+
+
+    So here the trie stores the words,
+    BAG,
+    BOY,
+    CAT
+
+  So if they were to type B,
+  note that both BAG and BOY share
+  the same prefix, B.
+
+  Each node can have several children,
+  as many as the number of letters
+  in the English language, 26.
+
+  Also the root node is always null.
+  // or an empty character,
+
+  Since we cannot have 26 roots.
+  // since words can start with any
+  // character
+
+  So the time complexity to lookup a word,
+  start from the root and ask,
+  does this node have a child with the
+  value of character, n
+
+  // where n is the character
+
+  So the time complexity of the operation is
+
+  Lookup  O(L)
+
+  // where L is the length of the word
+  // that we are searching for
+
+  Insert  O(L)
+
+  As must walk down the tree if the
+  current character doesn't exist
+  as a child of the current node,
+  then we just add it to the tree.
+
+  // so worst case, all the characters
+  // need to be added to the trie
+
+  Delete  O(L)
+
+  // removing each character,
+
+
+Exercise - Populating a Trie
+
+
+Exercise - Building a Trie
+
+  Mosh walk though:
+
+  For inserting
+
+  So if adding the word 'CAT' to a trie.
+
+  Start by declaring a variable, current,
+  which points to the root node.
+
+  Tries' root node are always empty.
+
+  We ask if the trie has a child with
+  the value of 'C'.
+
+  If not then we'll add it.
+
+  Then we'll set the current reference variable
+  to point to that child node.
+
+  Then we ask if it has a child with the
+  value of 'A'.
+
+  this process continues for 'T'.
+
+  Finally when it's completed,
+  we need to mark it as being the
+  end of the word, as it can be
+  used as a prefix for another word.
+
+  We want to easily be able to figure out
+  which words we have stored in
+  our trie.
+
+  So we must mark certain nodes
+  as the end of a word.
+
+  To implement this we need some classes.
+
+
+  Trie.js
+    insert(word: String)
+
+    (in Java)
+    index = ch - 'a'
+      // it'll be converted to
+      // their numeric representation
+
+    (in JavaScript)
+    index = ch.charCodeAt() - 'a'.charCodeAt()
+
+    Node.js // a private class for the vertex/node
+      fields:
+        value: char
+        isEndOfWord: boolean
+        children:
+          // (could be an array or hashmap)
+
+          // if array
+          // it'll be an array of Node[26]
+
+
+Solution - Building a Trie
+
+  // Mosh's implementation
+
+  public class Trie {
+    public static int ALPHABET_SIZE = 26;
+
+    private class Node {
+      private char value;
+      private Node[] children = new Node[ALPHABET_SIZE];
+      private boolean isEndOfWord;
+
+      public Node(char value) {
+        this.value = value;
+      }
+
+      @Override
+      public String toString() {
+        return "value=" + value;
+      }
+    }
+
+    private Node root = new Node('');
+
+    pubic void insert(String word) {
+      var current = root;
+      for (var ch : word.toCharArray()) {
+        var index = ch - 'a';
+        if (current.children[index] == null) {
+          current.children[index] = new Node(ch);
+        }
+        current = current.children[index];
+      }
+      current.isEndOfWord = true;
+    }
+  }
+
+
+  -
+
+  public static void main(String[] names) {
+    var trie = new Trie();
+    trie.insert("cat");
+    trie.insert("can");
+    System.out.println("Done");
+  }
+
+  // view result in debugger
+
+
+  The problem with using an array
+  to store the child nodes is that
+  every time we add a node,
+  we are allocating an array of size 26 elements.
+
+  // they are mostly null,
+  // so we are wasting space
+  // Hash Tables solve this problem
+  // of ensuring we aren't wasting memory
+
+An implementation with a HashTable
+
+  So instead of
+
+    private Node[] children = new Node[ALPHABET_SIZE];
+
+  Change it to
+
+      // from the java.util package
+
+      private HashMap<Character, Node> children = new HashMap<>();
+
+    So now modify
+
+  public void insert(String word) {
+    var current = root;
+    for (var ch : word.toCharArray()) {
+      if (current.children.get(ch) == null) {
+        // add an entry to hash table
+        current.children.put(ch, new Node(ch));
+      }
+      current = current.children.get(ch);
+    }
+  }
+
+
+
+A Better Abstraction
+
+  So we have some breaking changes.
+
+  How to prevent that?
+
+  That's where the abstraction principle
+  comes in.
+
+  Abstraction principle is that we
+  should not expose the inner working of our
+  classes to the outside.
+
+
+  Notice that we are working
+  directly with the children field.
+
+  When we change the inner data structure,
+  our code breaks.
+
+  So the insert() knows of the inner working
+  that a hash map is used to store
+  the children.
+
+  We want to be able to easily change this.
+
+
+  So insert() needs to be able to
+  check if a node has a character as a child,
+  needs to be able to add a character as a child node
+
+  How it happens internally, we don't care about.
+
+  So this is what we can do.
+
+  Modify the inner class.
+
+  In Node class
+
+  // this is one service
+  public boolean hasChild(char ch) {
+    return children.containsKey(ch);
+  }
+
+  // this is another service
+  public void addChild(char ch) {
+    children.put(ch, new Node(ch));
+  }
+
+  With this implementation,
+  we are utilizing abstraction,
+  and if we were to change the inner class.
+  It would not affect the outer class,
+  or other classes which are using it.
+
+  We can change the implementation details
+  without having the change the
+  dependent classes which are utilizing it.
+
+
+
+Exercise - Looking up a word
+
+  package.com.codewithmosh;
+
+  public class Main {
+    public static void main(String[] names) {
+      var trie = new Trie();
+      trie.insert("cat");
+      trie.insert("can");
+      trie.contains("cat"); // returns boolean
+    }
+  }
+
+  If one character is missing,
+  we return False, otherwise
+  ensure that it represents the end of
+  a word.
+
+  Test all the edge cases,
+  pass null, does exist, doesn't exist.
+  ect.
+
+
+Solution - Looking up a word
+
+  // utilize the benefit of abstraction,
+  // which makes it easier for us
+  // to change the internal code
+  // in the future
+
+  public boolean contains(String word) {
+    if (word == null)
+      return false;
+
+    var current = root;
+    for (var ch : word.toCharArray()) {
+      if (!current.hasChild(ch))
+        return false;
+      current = current.getChild(ch);
+    }
+    return current.isEndOfWord;
+  }
+
+  -
+
+  var trie = new Trie();
+  trie.insert("California");
+  System.out.println(trie.contains("Colorado"));
+
+Traversals
+
+  Traversing tries
+  There are two ways
+
+    * pre-order
+
+    * post-order
+
+  Pre-order
+    we visit each node first,
+    before we visit its children
+
+  Post-order
+    we go deep in a trie
+    from the leaf nodes then come back up
+
+
+  public Node[] getChildren() {
+    // the arg passed to .toArray() tells
+    // to put the result in a Node array
+    return children.values().toArray(new Node[0]);
+  }
+
+
+  public void traverse() {
+    traverse(root);
+  }
+
+  // this prints in order
+  private void traverse(Node root) {
+    // pre-order: visit the root first
+    System.out.println(root.value);
+
+    for (var child : root.getChildren())
+      traverse(child);
+  }
+
+  // this prints in reverse order
+  private void postTraverse(Node root) {
+    // post-order: visit the root last
+
+    for (var child : root.getChildren())
+      traverse(child);
+
+    System.out.println(root.value);
+  }
+
+
+  --
+
+  public static void main(String[] args) {
+    var trie = new Trie();
+    trie.insert("care");
+    trie.traverse();
+  }
+
+Exercise - Removing a Word
+
+  Start from the root and do a post-order
+  traversal in the tree
+  until we reach the last character.
+
+  We simply remove the
+  isEndOfWord marker by setting.
+
+  isEndOfWord = false
+
+  If it has no children,
+  then we could physically remove it.
+
+
+Solution - Removing a Word
+
+  Need two methods,
+  the public method and the private
+  implementation method.
+
+  // for Node class
+    public boolean hasChildren() {
+      return !children.isEmpty();
+    }
+
+    public void removeChild(char ch) {
+      children.remove(ch);
+    }
+
+
+
+  // now in Trie class
+
+  public void remove(String word) {
+    if (word == null)
+      return;
+
+    remove(root, word, 0);
+  }
+
+
+
+  // does the recursive word
+  private void remove(Node root, String word, int index) {
+    // base condition is when we meet
+    // the last letter of the word
+    if (index == word.length()) {
+      root.isEndOfWord = false;
+      return;
+    }
+
+    var ch = word.charAt(index);
+    var child = root.getChild(ch);
+    if (child == null)
+      return;
+
+    remove(child, word, index + 1); // the next index
+
+    // prove that nodes out in reverse order
+    // System.out.println(root.value);
+
+    if (!child.hasChildren && !child.isEndOfWord) {
+      root.removeChild(ch);
+    }
+  }
+
+
+
+Exercise - Auto Completion
+
+    car
+  card  careful       egg
+
+  Need to do a pre-order traversal,
+
+  so that characters some out in the
+  correct order,
+
+  Only look at the nodes with the relevant prefix
+
+  Must build different words so we
+  combine the characters as we
+  go down the tree.
+
+  // add letter by letter
+
+  // then check if node is marked as isEndOfWord
+    // in which case it should be added to a list
+
+  // then continue with pre-order traversal
+
+  Then recursive method will go back up
+  once a word is done
+
+  need 3 param s
+    Node root // the node we are visiting
+    String word // add value of the current node to this node
+    List<String> words
+
+Solution - Auto Completion
+
+  in Trie.java
+
+  public List<String> findWords(String prefix) {
+    // go to the last node in the prefix
+    // create a separate private method
+
+    // List is an interface
+    // ArrayList is an implementation of that interface
+    List<String> words = new ArrayList<>();
+    var lastNode = findLastNodeOf(prefix);
+
+    findWords(lastNode, prefix, words);
+
+    return words;
+  }
+
+  private void findWords(Node root, String prefix, List<String> word) {
+    // pre order traversal,
+    // deal with current node's value
+    // before its children
+    if (root.isEndOfWord)
+      words.add(prefix);
+
+    for (var child : root.getChildren())
+      findWords(child, prefix + child.value, words);
+  }
+
+  private Node findLastNodeOf(String prefix) {
+    var current = root;
+    for (var ch : prefix.toCharArray()) {
+      var child = current.getChild(ch);
+      if (child == null)
+        return null;
+      current = child;
+    }
+    return current;
+  }
+
+
+Tries - Exercises
+
+
+Summary
+
+  Tries
+  operations are O(L)
+  // cost is constant based on the length
+  // of the world
+
+  ideal for auto completion

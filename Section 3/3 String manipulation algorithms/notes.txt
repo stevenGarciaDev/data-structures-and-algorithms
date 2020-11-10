@@ -1,0 +1,255 @@
+introduction
+
+exercises
+
+useful Java methods
+
+count vowels
+
+reverse a string
+
+reverse words
+
+rotations
+
+remove duplicates
+
+most repeated char
+
+sentence capitalization
+
+anagrams - using sorting
+
+anagrams - using histogramming
+
+palindrome
+
+/* ------------
+
+introduction
+
+  Most popular interview questions about
+  strings.
+
+exercises
+
+useful Java methods
+
+count vowels
+
+  // my solution
+  class MainClass {
+    public static void Main (string[] args) {
+      Console.WriteLine("Vowels in 'hello' are {0}", MainClass.CountVowels("hello"));
+    }
+
+    public static int CountVowels(string input) {
+      Dictionary<char, int> vowels = new Dictionary<char, int>();
+      vowels.Add('a', 1);
+      vowels.Add('e', 1);
+      vowels.Add('i', 1);
+      vowels.Add('o', 1);
+      vowels.Add('u', 1);
+      int count = 0;
+      string lowercaseInput = input.ToLower();
+      foreach (char c in lowercaseInput) {
+        if (vowels.ContainsKey(c))
+          count++;
+      }
+      return count;
+    }
+  }
+
+
+  // Mosh in Java,
+  // utility methods are static
+  public class StringUtils {
+    public static int countVowels(String str) {
+      int count = 0;
+      String vowels = "aeiou";
+      for (var ch : str.toCharArray()) {
+        if (vowels.indexOf(ch) != -1)
+          count++;
+      }
+      return count;
+    }
+  }
+
+  We could also use a set which is
+  good for looking up values and ensures
+  uniqueness.
+
+  If you are dealing with a really large
+  string then it's better to use a set
+  rather than a string.
+
+  MUST test it.
+  Consider the edge cases.
+  white spaces, empty strings, null,
+  etc.
+
+  public class StringUtils {
+    public static int countVowels(String str) {
+      if (str == null)
+        return 0;
+
+      int count = 0;
+      String vowels = "aeiou";
+      for (var ch : str.toLowerCase().toCharArray()) {
+        if (vowels.indexOf(ch) != -1)
+          count++;
+      }
+      return count;
+    }
+  }
+
+
+reverse a string
+
+  public static string reverse(string input) {
+    if (input == null)
+      return "";
+
+    var reversedStr = new StringBuilder();
+    for (int i = input.Length - 1; i >= 0; i--) {
+      reversedStr.Append(input[i]);
+    }
+    return reversedStr.ToString();
+  }
+
+  --
+  Mosh
+
+  could iterate from end and add to a new string.
+
+  more efficient than a stack,
+  same performance of O(n)
+
+  NOTE: strings are immutable
+    it's another creation in memory,
+
+
+
+  If you are creating a new string
+  for every iteration,
+  then appending to create a new string will
+  be a O(n) operation since it's
+  creating a new character array and
+  passing elements into it
+
+  resulting in O(n^2)
+
+  So instead use StringBuilder()
+  to create mutable strings
+  result will be O(n) for
+  the time complexity
+
+reverse words
+
+  My implementation is to
+  split the sentence by empty space.
+
+
+
+rotations
+
+  // consider concatenating,
+  // ABCD+ABCD
+  // resulting in ABCDABCD
+
+  so sequence of characters are repeated in the exact same order
+
+  then you can check if that sequence
+  contains str2
+
+
+  public static boolean areRotations(String str1, String str2) {
+    if (str1.length() != str2.length())
+      return false;
+
+    if (!(str1 + str1).contains(str2))
+      return false;
+
+    return true;
+  }
+
+  refactor it to be
+
+  public static boolean areRotations(String str1, String str2) {
+    if (str1 == null || str2 == null)
+      return false;
+
+    return str1.length() != str2.length() &&
+      (!(str1 + str1).contains(str2));
+  }
+
+
+remove duplicates
+
+
+most repeated char
+
+  public static char getMaxOccuringChar(String str) {
+    Map<Char, Integer> frequencies = new HashMap();
+    for (var ch : str.toCharArray()) {
+      if (frequencies.containsKey(ch))
+        frequencies.replace(ch, frequencies.get(ch) + 1);
+      else
+        frequencies.put(ch, 1);
+    }
+  }
+
+  alternative implementation
+
+  If you don't have access to a hash table
+
+  you can use an integer array to store the frequencies
+
+  public static char getMaxOccuringChar(String str) {
+    if (str == null || str.isEmpty())
+      throw new IllegalArgumentException();
+
+    final int ASCII_SIZE = 256;
+    int[] frequencies = new int[ASCII_SIZE];
+
+    for (var ch : str.toCharArray())
+      frequencies['a']++;
+
+    char result = ' ';
+    int max = 0;
+    for (var i = 0; i < frequencies.length; i++) {
+      if (frequencies[i] > max) {
+        max = frequencies[i];
+        result = (char) i;
+      }
+    }
+
+    return result;
+  }
+
+sentence capitalization
+
+  so + means one or more
+
+
+  public static string capitalize(String sentence) {
+    if (sentence == null || sentence.trim().isEmpty())
+      return "";
+
+    String[] words = sentence
+                      .trim()
+                      .replaceAll(" +", " ")
+                      .split(" ");
+    for (var i = 0; i < words.length; i++) {
+      words[i] = words[i].substring(0, 1).toUpperCase() +
+                 words[i].substring(1).toLowerCase();
+    }
+
+    return String.join(" ", words);
+  }
+
+anagrams - using sorting
+
+anagrams - using histogramming
+
+palindrome

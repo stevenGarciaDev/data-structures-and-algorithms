@@ -1,0 +1,175 @@
+Introduction
+
+Understanding Arrays
+
+Working with arrays in Java
+
+Exercise Array Class
+
+Solution Creating the class
+
+Solution insert()
+
+solution removeAt()
+
+solution indexOf()
+
+dynamic arrays
+
+arrays - exercises
+
+/* -----------------
+
+Introduction
+
+  Arrays are a fundamental data structure
+  for storing items sequentially.
+
+Understanding Arrays
+
+  The simplest data structure.
+
+  We allocate a fixed block of memory,
+  with memory addresses which are contiguous.
+  // the same block.
+
+  This enables fast random access. O(1) lookup
+
+  Weakness of arrays are that they are static,
+  with a fixed size.
+
+  So you must know beforehand what the size is.
+  Otherwise it'll be too small or too large with wasted memory.
+
+
+  For insert, O(n).
+  In direct proportion to the size of the array
+  as worst case we run out of space and need to
+  allocate a new array with double the size.
+  Then traverse and copy over the elements.
+
+  Delete, Omega (1) in the best case
+
+  But what if remove at the beginning,
+  we have to move over to fill in that empty address.
+  So O(n)
+
+
+  Linked List are fast for insertion and deletion.
+
+
+Working with arrays in Java
+
+  import java.util.Arrays;
+
+  public class Main {
+    public static void main(String[] args) {
+      int[] numbers = new int[3];
+      System.out.println(numbers);
+      // get the type of the array and value
+      // based on the memory address
+
+      // to see the contents of the arrays,
+      // use the Arrays class
+
+      System.out.println(Arrays.toString(numbers));
+
+      numbers[0] = 10;
+      numbers[1] = 20;
+      numbers[2] = 30;
+
+      // if you know the values that you are going to
+      // be storing ahead of time there is a faster
+      // way to initialize an array in Java
+      int[] myNumbers = { 10, 20, 30 };
+      System.out.println(myNumbers.length);
+    }
+  }
+
+Exercise Array Class
+
+  Array numbers = new Array(3);
+  numbers.insert(10);
+  numbers.insert(20);
+  numbers.insert(30);
+  numbers.insert(40);
+  numbers.print();
+  numbers.removeAt(3);
+  System.out.println(numbers.indexOf(10));
+  // will return -1 if not found
+
+
+Solution Creating the class
+
+  package com.codewithmosh;
+
+
+
+Solution insert()
+
+solution removeAt()
+
+  Be sure to validate the value that's passed in
+  and thrown an exception.
+  // since not interfacing with a GUI,
+  // we are interfacing with a programmer
+
+  Always since you can not trust user input or even
+  the consumer of the API.
+
+solution indexOf()
+
+dynamic arrays
+
+  Java has two implementations of dynamic arrays.
+
+  Vector<T>
+  and
+  ArrayList<T>
+
+  From the java.util package
+
+  Vectors grow by 100% - synchronized
+
+    // when we say a method is synchronized
+    // it means that only one thread can access
+
+    EX:
+      if a multithreaded applications,
+      then can't use vectors
+
+  ArrayList grow by 50% -
+
+
+  Ex:
+
+    import java.util;
+
+    ArrayList<Integer> list = new ArrayList<>();
+    list.add(10);
+    list.add(20);
+    list.add(30);
+    list.remove(0);
+      // so .remove() is an overloaded method
+      // and can take in either the index to remove
+      // or the object to remove
+
+    list.indexOf(20);
+      // find the index for the first occurrence
+
+    list.lastIndexOf(20);
+
+    list.contains(20);
+      // returns a boolean
+
+    list.size();
+
+    list.toArray();
+      // cast to an array object
+      // for example in the case
+      // when you are passing the current object
+      // into a method that only
+      // takes in an array
+
+
+arrays - exercises

@@ -1,0 +1,14 @@
+// non-binary search tree, just a Binary Tree
+findMin() {
+  if (this.root === null) {
+    return;
+  }
+
+  return this.findBinaryTreeMin(this.root, this.root.value);
+}
+
+findBinaryTreeMin(root, minValue) {
+  if (root === null) {
+    return;
+  }
+}

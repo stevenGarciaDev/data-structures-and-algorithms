@@ -1,0 +1,725 @@
+Introduction
+
+Bubble Sort
+
+Bubble Sort - implementation
+
+Selection Sort
+
+Selection Sort - implementation
+
+Insertion Sort
+
+Insertion Sort - implementation
+
+Merge Sort
+
+Merge Sort - implementation
+
+Quick Sort
+
+Partitioning
+
+Quick Sort - implementation
+
+Counting Sort
+
+Counting Sort - implementation
+
+Bucket Sort
+
+Bucket Sort - implementation
+
+/* --------------
+
+Introduction
+
+  These algorithms come up in technical
+  interviews all the time
+  so ensure that you study and understand
+  each of them.
+
+  Various frameworks and libraries help us
+  sort data.
+
+  As software engineers we almost never
+  have to think how sorting works.
+
+  Just call a method, pass our data
+  and it gets sorted magically.
+
+  But studying them is important to
+  be an outstanding programmer.
+
+  For each sorting algorithm
+  must discuss
+  * how they work
+  * time and space complexity
+  * implementation
+
+Bubble Sort
+
+  The first sorting algorithm
+  is the simplest.
+
+  8, 2, 4, 1, 3
+
+  We scan from left to right
+  and swap if they are out of order.
+
+  We begin comparing at index 0 and 1,
+  if the
+  right item is smaller than the left item,
+  we swap them.
+
+  // as to make the array in ascending order
+
+  We continue this comparison and performing
+  swaps,
+
+  We iterate through the entire array.
+  But we need to perform multiple iterations/passes
+  to fully sort our array
+
+  At the end of each pass, the next largest
+  item moves to its correctly sorted position.
+
+  // therefore the largest value bubbles to the right
+
+  Time complexity
+
+              Best        Worst
+
+  Passes       O(1)         O(n)
+  Comparisons  O(n)         O(n)
+
+  Total        O(n)          O(n^2)
+
+
+Bubble Sort - implementation
+
+  Mosh's implementation
+
+  BubbleSort.java
+
+  public class BubbleSort {
+    public void sort(int[] array) {
+      for (var i = 0; i < array.length; i++) {
+        // for each iteration, the next largest
+        // will bubble to its correct position
+
+        // the inner loop is used to compare every
+        // two items
+        for (var j = 1; j < array.length; j++) {
+          if (array[j] < array[j - 1]) {
+            this.swap(array, j, j - 1);
+          }
+        }
+      }
+    }
+
+    private void swap(int[] array, int index1, int index2) {
+      var temp = array[index1];
+      array[index1] = array[index2];
+      array[index2] = temp;
+    }
+  }
+
+
+  -
+  int[] numbers = { 7, 10, 12, 4, 9 };
+  var sorter = new BubbleSort();
+  sorter.sort(numbers);
+  System.out.println(Arrays.toString(numbers));
+
+
+  There are places to optimize the implementation.
+
+  What if the array is already sorted,
+  or partially sorted?
+
+  boolean isSorted;
+
+  In every iteration, you assume that it's true
+  and return immediately.
+
+  public void sort(int[] array) {
+    boolean isSorted;
+    for (var i = 0; i < array.length; i++) {
+      isSorted = true;
+      for (var j = 1; j < array.length; j++) {
+        if (array[j] < array[j - 1]) {
+          this.swap(array, j, j - 1);
+          isSorted = false;
+        }
+      }
+      if (isSorted)
+        return;
+    }
+  }
+
+  We don't need to compare every item in the array,
+  rather only the values which are not in their
+  correct position.
+
+  So can modify our for loop conditional.
+
+  public void sort(int[] array) {
+    boolean isSorted;
+    for (var i = 0; i < array.length; i++) {
+      isSorted = true;
+      for (var j = 1; j < array.length - i; j++) {
+        if (array[j] < array[j - 1]) {
+          this.swap(array, j, j - 1);
+          isSorted = false;
+        }
+      }
+      if (isSorted)
+        return;
+    }
+  }
+
+  The time complexity is still O(n^2)
+  for the worst case.
+
+
+Selection Sort
+
+  With every pass, you find the minimum value
+  and swap it to its correct position.
+
+  So the array will contain a sorted part (left side)
+  and an unsorted part (the right side)
+
+  Think of it as a flag on the left side
+  which keeps moving towards the right.
+
+  Find the minimum value within the unsorted section,
+  then perform a swap with the index position
+  of the flag.
+  Then increment the flag.
+
+  It's called selection sort, because
+  with each pass, you find/select the
+  next minimum value and move it
+  to the correct place.
+
+  Time complexity
+
+              Best        Worst
+
+  Passes       O(n)         O(n)
+  Comparisons  O(n)         O(n)
+
+  Total        O(n^2)          O(n^2)
+
+
+  The unsorted part shrinks for each pass,
+  but still n^2 as it measures the rate of
+  growth for the input.
+
+  How will the rate of performance for the algorithm
+  be affected as the input increases.
+
+  It's a slow algorithm.
+
+
+
+Selection Sort - implementation
+
+  public class SelectionSort {
+    public void sort(int[] array) {
+      for (var i = 0; i < array.length; i++) {
+        var minIndex = i;
+        for (var j = i + 1; j < array.length; j++) {
+          if (array[j] < array[minIndex])
+            minIndex = j;
+        }
+        // do swap
+        var temp = array[i];
+        array[i] = array[minIndex];
+        array[minIndex] = temp;
+      }
+    }
+  }
+
+  So could refactor code to use helper method,
+  findMinIndex(array, minIndex)
+
+
+Insertion Sort
+
+  Good way to understand is to think
+  of playing a card card.
+
+  Each element is a card.
+
+  Each time you get a card, you insert
+  it into its correct position.
+
+  Traverse through the algorithm,
+  we don't do swaps,
+  rather we look through all the items
+  we have already seen.
+  // in the sorted section
+
+  And perform shifts
+  to the right as to make space
+  for the new element to be inserted.
+
+  You store the value in a separate variable,
+  called current.
+
+  Next shift/copy to the right
+  Now the item is now in the correct position
+
+  left side is sorted, right side is unsorted
+
+  Ex:
+
+  sorted  unsorted
+  2, 8    4, 1, 3
+
+  Next we are on '4'
+  current = 4
+  if they are greater than 4, then
+  shift elements to the right to make space
+
+  becomes
+  2, 8    8, 1, 3
+
+  then
+  2, 4, 8,   1, 3
+
+  so
+  list[n + 1] = list[n]
+  list[n] = current
+
+
+  [2, 4, 8,   1, 3]
+  current = 1,
+  shift greater values to the right and
+  make space
+
+  Time complexity analysis
+
+                Best    Worst
+  iteration      O(n)     O(n)
+  // must visit all nodes
+
+  shift items    O(1)     O(n)
+
+  Total          O(n)     O(n^2)
+
+  // same as bubble sort
+
+
+Insertion Sort - implementation
+
+  InsertionSort.java
+
+  public class InsertionSort {
+    public void sort(int[] array) {
+      for (var i = 1; i < array.length; i++) {
+        var current = array[i];
+        var j = i - 1;
+        while (j >= 0 && array[j] > current) {
+          // shift item to the right
+          array[j + 1] = array[j];
+          j--;
+        }
+        array[j + 1] = current;
+      }
+    }
+  }
+
+Merge Sort
+
+  The previous sorting algorithms are
+  inefficient and run in quadratic time.
+
+  The more efficient algorithms
+  for sorting run in O(nlogn) time.
+
+  Merge sort is to break down a list
+  into smaller and smaller sublist,
+  sort those,
+  and then merge them back to build
+  a complete list.
+
+  [8, 2, 4, 1, 3]
+
+  let middleIndex = length / 2;
+
+  So we split the array into two subarrays.
+
+                [8, 2, 4, 1, 3]
+                /           \
+            [8, 2]        [4, 1, 3]
+
+
+      We allocate 2 smaller arrays
+      and copy into them.
+
+    Allocate additional space for this
+    algorithm to run.
+
+    Note that arrays with only one element
+    are already sorted.
+
+          [8, 2, 4, 1, 3]
+          /           \
+      [8, 2]        [4, 1, 3]
+      /   \            /  \
+    8      2          4     [1, 3]
+                              /  \
+                             1    3
+
+    Now merge
+
+    [2, 8]            4
+                            [1, 3]
+                        (merge)
+                        [1, 3, 4]
+
+            (merge)
+        [1, 2, 3, 4, 8]
+
+
+    Now combine in a manner that the
+    merged array is sorted.
+
+    We use index pointers/markers for both arrays
+    and traverse both, comparing and
+    copying over to the new array.
+    // we increment the index pointer/marker
+    // respectively
+
+
+  Merge sort is a divide and conquer
+  algorithm where we recursively
+  divide a problem into smaller subproblems
+  until they become easy to solve.
+
+  Then combines the solutions to build
+  the solution for the original problem.
+
+              Best        Worst
+
+  Dividing    O(log n)    O(log n)
+  Merging     O(n)        O(n)
+
+
+
+  Time complexity O(n log n)
+  // way more efficient that O(n^2)
+
+  But it comes with the cost of allocating
+  additional space.
+
+  Space, must allocate two new subarrays.
+  All these subarrays combined together
+  take the same space as the original array.
+
+
+  Note that when we merge the subarrays,
+  we don't need to create a new array,
+  rather we just copy the items into
+  the input array.
+
+  So space complexity is O(n)
+
+
+
+  No need to allocate a separate array
+
+  There are variations that can sort
+  an array in-place without allocating
+  separate space.
+
+  google search: in-place merge sort
+
+
+  This solution is one that requires auxilliary space
+  and it returns a sorted result rather than in-place.
+
+  function mergeSort(list) {
+    if (list.length <= 1)
+      return list;
+    const middleIndex = Math.round(list.length / 2);
+
+    const leftSubarray = mergeSort(list.slice(0, middleIndex));
+    const rightSubarray = mergeSort(list.slice(middleIndex));
+    return merge(leftSubarray, rightSubarray);
+  }
+
+  function merge(leftArray, rightArray) {
+    let sortedArray = [];
+    let leftPointer = 0;
+    let rightPointer= 0;
+
+    while (leftPointer < leftArray.length && rightPointer < rightArray.length) {
+      if (leftArray[leftPointer] <= rightArray[rightPointer]) {
+        sortedArray.push(leftArray[leftPointer]);
+        leftPointer++;
+      } else {
+        sortedArray.push(rightArray[rightPointer]);
+        rightPointer++;
+      }
+    }
+
+    while (leftPointer < leftArray.length) {
+      sortedArray.push(leftArray[leftPointer]);
+      leftPointer++;
+    }
+
+    while (rightPointer < rightArray.length) {
+      sortedArray.push(rightArray[rightPointer]);
+      rightPointer++;
+    }
+    return sortedArray;
+  }
+
+  ----
+  Modify this to be in place.
+
+
+Merge Sort - implementation
+
+  Mosh's implementation
+
+  package.com.codewithmosh;
+
+  public class MergeSort {
+    public void sort(int[] array) {
+      // base case
+      if (array.length < 2)
+        return;
+
+      // need to divide this array into half
+      var middle = array.length / 2;
+
+      int[] left = new int[middle];
+      for (var i = 0; i < middle; i++)
+        left[i] = array[i];
+
+      int[] right = new int[array.length - middle];
+      for (var i = middle; i < array.length; i++)
+        right[i - middle] = array[i];
+
+      // sort each half
+      sort(left);
+      sort(right);
+
+      // merge the result
+      merge(left, right, array);
+    }
+
+    private void merge(int[] left, int[] right, int[] result) {
+      int i = 0, j = 0, k = 0;
+
+      while (i < left.length && j < right.length) {
+        if (left[i] <= right[j]) {
+          result[k++] = left[i++];
+        } else {
+          result[k++] = right[j++];
+        }
+      }
+
+      while (i < left.length)
+        result[k++] = left[i++];
+
+      while (j < right.length)
+        result[k++] = right[j++];
+    }
+  }
+
+Quick Sort
+
+  One of the most used algorithm and
+  it's the one built into most languages
+  and frameworks.
+
+  Fairly efficient, and doesn't require
+  any additional space.
+
+  We start by selecting an item, known
+  as the pivot and we rearrange an item
+  such that
+  all the items smaller than the pivot
+  are on the left.
+
+  And the items larger than the pivot are
+  on the right.
+
+  This is called Partitioning.
+
+  So we divide the array into two partitions
+  which are separated by the pivot.
+
+  Typically we select the last item
+  of the pivot.
+  // there are variations where we would
+  select the last item, or a random item
+
+  The pivot will be in the correct position
+  after the partitioning.
+
+  As part of reordering the item,
+  we don't need to worry about the
+  items in the right partition.
+
+  That's why Quick sort has logarithmic
+  complexity as we narrow down
+  our partitions.
+  // almost breaking them into half
+
+
+Partitioning
+
+  We select the last element in the array
+  as the pivot then rearrange the other
+  items around it.
+
+  We need two pointers.
+  To iterate over the array, i
+
+  and the second pointer marks the
+  boundary of the left and right partitions, b
+  // b starts at -1
+
+  Think of boundary as the end of the left
+  partition.
+
+  If we find items larger than the pivot value,
+    we increment i
+
+  when we encounter an item whose value is
+  smaller than the pivot,
+    we increment the boundary, b
+
+    Then we swap the values
+    at i and b
+
+  This will continue until i reaches the
+  end of the array.
+  Wherever b is, we increase it by 1
+
+  then it will be the index of
+  where the pivot should go
+
+    swap the values at the indexes of b and i
+
+
+        Quick Sort
+
+                    Best          Worst
+
+  Partitioning      O(n)        O(n)
+      // as must iterate through all the items
+
+  # of times       O(log n)         O(n)
+
+  Total            O(n log n)          O(n^2)
+
+
+
+  ( when pivot ends up in the middle )
+  is when it'll be O(n log n)
+  as the size of the partitioning will
+  make it be in halves
+
+  But if the pivot value chosen is a value
+  that is the smallest or largest,
+  then the size of the partitioning will only
+  have one less element
+  // rather than being in halve
+
+  So to solve this problem
+  we can use different methods for pivot selection
+
+  * pick randomly
+  * use the middle index
+  * average the first, middle, and last item
+
+  These solutions reduce the likelihood
+  of the worst scenario
+  but we cannot prevent it.
+
+
+  With quick sort, our partitioning is done
+  in-place
+  but we must count for the space in
+  the recursive calls as it uses the stack.
+
+  So the space is
+    best case O (log n)
+
+    worst case O(n)
+
+  We prefer quick sort to merge sort
+  as it requires less space for
+  the same time complexity.
+
+Quick Sort - implementation
+
+  package com.codewithmosh;
+
+  public class QuickSort {
+    public void sort(int[] array) {
+      sort(array, 0, array.length - 1);
+    }
+
+    private void sort(int[] array, int start, int end) {
+      // base condition
+      // when partition is 1 or less elements
+      if (start >= end)
+        return;
+
+      // partition
+      // the pivot which we assume to be the last index
+      // will move to its correct position
+      var boundary = partition(array, start, end);
+
+      // from that pivot position we will
+      // recursively sort the left and right partitions
+
+      // sort left
+      // sort right
+
+      sort(array, start, boundary - 1);
+      sort(array, boundary + 1, end);
+    }
+
+    // returns the index of the pivot
+    // after it has moved to the correct position
+    private int partition(int[] array, int start, int end) {
+      // assume pivot to be the last value of the array
+      var pivot = array[end];
+      var boundary = start - 1; // left partition is empty
+      // and right partition starts at the index 0
+
+      for (var i = start; i <= end; i++) {
+          if (array[i] <= pivot) {
+            boundary++;
+            swap(array, boundary, i);
+          }
+      }
+
+      return boundary;
+    }
+
+    private void swap(int[] array, int index1, int index2) {
+      var temp = array[index1];
+      array[index1] = temp;
+      array[index2] = temp;
+    }
+  }
+
+Counting Sort
+
+Counting Sort - implementation
+
+Bucket Sort
+
+Bucket Sort - implementation

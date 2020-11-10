@@ -1,0 +1,265 @@
+Introduction
+
+Linear Search
+
+Linear Search - implementation
+
+Binary Search
+
+Binary Search - recursive implementation
+
+Binary Search - iterative implementation
+
+Ternary search
+
+Ternary search - implementation
+
+Jump search
+
+Jump search - implementation
+
+Exponential Search
+
+Exponential Search - implementation
+
+/* ---------
+
+Introduction
+
+  5 essential searching algorithms
+  that every developer must know.
+
+    * linear search
+    * binary search
+    * ternary search
+    * jump search
+    * exponential search
+
+  To Computer Science students and come up
+  in coding interviews.
+
+  implementations are fairly easy.
+
+Linear Search
+
+  Simplest searching algorithm,
+  where we iterate through a list
+  and if we find an item then
+  we return it.
+
+  Otherwise return -1.
+
+
+                          Best              Worst
+  Time Complexity         O(1)              O(n)
+
+  Space Complexity        O(1)              O(1)
+
+
+  Slow searching algorithm but works well for a small list.
+
+  The algorithm slows down as the size of the input grows.
+
+Linear Search - implementation
+
+  my implementation
+
+    namespace Searching
+    {
+      public static class Search
+      {
+        public static int Search(int[] array, int value)
+        {
+          for (int i = 0; i < array.Length; i++)
+          {
+            if (array[i] == value)
+              return i;
+          }
+          return -1;
+        }
+      }
+    }
+
+
+Binary Search
+
+  Faster than linear search.
+
+  But can only be performed on
+  a sorted list.
+
+  Sort first, then binary search.
+
+  Calculate the index of the middle item.
+
+    middle = (start + end) / 2;
+
+  Binary search is much faster than
+  linear since for each step
+  we cut down the number of items
+  we need to inspect by half.
+
+  It's a divide and conquer algorithm.
+  At every step,
+  we divide the problem into a smaller problem.
+
+  Now split to a partition.
+
+
+
+  Time complexity     O(log n)
+
+  Space Complexity
+    // if recursive then stored on the stack
+    O(log n)
+    equal to the number of recursive calls
+
+    If use iteration
+    then space complexity if O(1)
+
+  --
+  The extra space we need for recursion
+  is quite small.
+
+  log       1,000,000 = 19
+    base 2
+
+  So at maximum 19 comparisons,
+  19 recursive calls stored on the stack.
+
+  Not a big deal.
+
+  Recursive implementation is cleaner.
+
+  For the iterative solution,
+  we need references to the
+  left and right to determine
+  the boundary of the segment
+  we are inspecting.
+
+  We update at every step until
+  the segment becomes empty.
+  Then our while loop will terminate.
+
+Binary Search - recursive implementation
+
+  public static int BinarySearchRecursive(int[] array, int value, int start, int end)
+  {
+    int middleIndex = (start + end) / 2;
+    if (array[middleIndex] == value)
+    {
+      return middleIndex;
+    }
+    else if (array[middleIndex] < value)
+    {
+      return BinarySearchRecursive(array, value, start, middleIndex);
+    }
+    else if (array[middleIndex] > value)
+    {
+      return BinarySearchRecursive(array, value, middleIndex, end);
+    }
+    else
+    {
+      return -1;
+    }
+  }
+
+Binary Search - iterative implementation
+
+  public static int BinarySearchIterative(int[] array, int value)
+  {
+    int start = 0;
+    int end = array.Length - 1;
+
+    while (start <= end)
+    {
+      int middleIndex = (start + end) / 2;
+      if (array[middleIndex] == value)
+      {
+        return middleIndex;
+      }
+      else if (array[middleIndex] < value)
+      {
+        start = middleIndex + 1;
+      }
+      else if (array[middleIndex] > value)
+      {
+        end = middleIndex - 1;
+      }
+    }
+    return -1;
+  }
+
+Ternary search
+
+  Another searching algorithm
+  that's similar to binary search.
+
+  Instead of dividing the list into half
+  every step.
+
+  We divide it into three parts.
+
+  We'll have mid1 and mid2.
+
+  To calculate the index.
+
+  We first calculate the size of our
+  partitions.
+
+  partitionSize = array.length / 3;
+
+  // where left is the start of the left partition
+  // right is the end of the right partition
+
+  mid1 = left + partitionSize;
+
+  mid2 = right - partitionSize;
+
+
+  If the value we are searching for is
+  not in one of the middle points,
+  then it can be in one of the partitions.
+
+  Repeat all the steps with the
+  smaller partitions.
+
+  Could implement it with
+  recursion or iteration.
+
+  Time complexity
+    O(log n)
+    // base 3
+
+    2^x = 8
+
+    Not any faster than
+    binary search.
+
+  In binary search we check
+    target == mid
+    target > mid
+    target < mid
+
+  In ternary search
+    target > mid2
+    target == mid2
+    target < mid2 && target > mid1
+    target == mid1
+    target < mid1
+
+  Binary search is FASTER than ternary search.
+
+  As we divide our partitions into smaller
+  parts, our searching gets slower.
+
+
+Ternary search - implementation
+
+Jump search
+
+Jump search - implementation
+
+Exponential Search
+
+Exponential Search - implementation

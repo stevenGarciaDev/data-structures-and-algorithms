@@ -1,0 +1,575 @@
+Introduction
+
+What are Linked List
+
+Working with linked list
+
+exercise - building a linked list
+
+solution - addLast
+
+solution - addFirst
+
+solution - indexOf
+
+solution - contains
+
+solution - removeFirst
+
+solution - removeLast
+
+implementing size()
+
+converting linked list to arrays
+
+cheat sheets
+
+arrays vs linked lists
+
+types of linked lists
+
+exercise - reversing a linked list
+
+solution - reversing a linked list
+
+exercise - kth node from the end
+
+solution - kth node from the end
+
+summary
+
+/* --------------------
+
+Introduction
+
+  Second most commonly used data structure,
+  which solve many of the problems encountered
+  with arrays
+  such as inefficient deletion and insertion.
+
+  Used as a fundamental building block for more complex
+  data structures.
+
+What are Linked List
+
+  To store a list of objects in sequence
+  but unlike arrays
+  they grow and shrink automatically.
+
+  // no amortized memory needs to be allocated
+
+  A group of nodes,
+  containing the value and references to the
+  previous and next memory address in the sequence.
+
+  The nodes are linked together.
+
+  Ex:
+
+  Head            Tail
+  (10) -> (20) -> (30)
+
+  -
+
+  For a singly linked list
+
+  Lookup by value
+    O(n)
+
+  Lookup by index
+    O(n)
+
+  insert at beginning or end
+    // when have references to both Head and Tail
+      O(1)
+
+  insert in middle
+    O(n)
+
+  Deletion at beginning or end
+    O(n)
+
+Working with linked list
+
+  NOTE:
+    If you don't specify a type, (generic),
+    then it can accept any data type.
+
+  --
+
+  import java.util.LinkedList;
+
+  LinkedList<Integer> list = new LinkedList<>();
+  list.addLast(10);
+  list.addLast(20);
+  list.addFirst(5);
+  list.removeLast();
+  list.remove(1);
+  list.contains(10);
+  list.indexOf(20);
+  list.size();
+  var array = list.toArray();
+
+exercise - building a linked list
+
+  Node class
+    value, next
+
+  Linked List
+    first, last
+
+  implement the methods
+
+  * addFirst
+  * addLast
+  * deleteFirst
+  * deleteLast
+  * contains
+  * indexOf
+
+solution - addLast
+
+  Note,
+  the Node class should be an inner class.
+
+  if (this.first === null)
+    //
+  else
+
+  Note:
+    Test your code as you write so that you
+    aren't doing it all at the end,
+
+    do TDD
+
+solution - addFirst
+
+  public void addFirst(int n) {
+    Node node = new Node(n);
+    if (this.first == null) {
+      first = last = node;
+    } else {
+      node.next = first;
+      this.first = node;
+    }
+  }
+
+  So improve this code and make it more readable.
+
+  Abstract conditionals into private methods
+
+  private boolean isEmpty() {
+    return first == null;
+  }
+
+  public void addFirst(int n) {
+    Node node = new Node(n);
+    if (this.isEmpty()) {
+      first = last = node;
+    } else {
+      node.next = first;
+      this.first = node;
+    }
+  }
+
+
+solution - indexOf
+
+  public int indexOf(int n) {
+    int index = 0;
+    var current = first;
+    while (current != null) {
+      if (current.value == item) return index;
+      current = current.next;
+      index++;
+    }
+    return -1;
+  }
+
+solution - contains
+
+  public boolean contains(int item) {
+    return indexOf(item) != -1;
+  }
+
+solution - removeFirst
+
+  public void removeFirst() {
+    if (this.isEmpty()) {
+      throw new NoSuchElementException("No elements in list");
+    }
+
+    if (first == last) {
+      first = last = null;
+    } else {
+      Node second = this.first.next;
+      first.value = null;
+      this.first = second;
+    }
+  }
+
+solution - removeLast
+
+  public void removeLast() {
+    var current = first;
+    while (current != null) {
+      if (current.next == this.last) break;
+      current = current.next;
+    }
+  }
+
+  // abstract the logic into a separate private method
+
+  private Node getPrevious(Node node) {
+    var current = first;
+    while (current != null) {
+      if (current.next == node) return current;
+      current = current.next;
+    }
+    return null;
+  }
+
+  // MUST consider the edge cases
+  public void removeLast(Node node) {
+    if (isEmpty()) {
+      throw new NoSuchElementException();
+    } else if (this.first == this.last) {
+      first = last = null;
+      size = 0;
+      return;
+    }
+
+    Node previous = this.getPrevious(last);
+    this.last = previous;
+    this.last.next = null;
+  }
+
+implementing size()
+
+  We don't want to recalculate the size
+  every time we invoke this method
+
+  What if the linked list has
+  a million nodes?
+
+  -> have an instance variable,
+  size, which you update
+
+
+  public int size() {
+    return this.size;
+  }
+
+converting linked list to arrays
+
+  Some methods can only be performed on an array
+  so need to be able to convert a Linked List
+  into an array.
+
+  public int[] toArray() {
+    int[] array = new int[this.size];
+    var current = this.first;
+    var index = 0;
+    while (current != null) {
+      array[index] = current.value;
+      index++;
+      current = current.next;
+    }
+    return array;
+  }
+
+  in main method could do
+  ...
+
+  var array = list.toArray();
+  System.out.println(Arrays.toString(array));
+
+cheat sheets
+
+  hackerearth.com
+
+  Understand the concepts, do not memorize the runtime complexities
+  of their operations.
+
+arrays vs linked lists
+
+  Common interview questions.
+
+  Space
+    - static arrays have fixed size
+    - dynamic arrays grow by 50-100% when full
+    - linked lists don't waste memory
+      // although have some extra memory due to
+      // storing references for previous and next nodes
+
+    So if you know the exact amount of elements you need
+    -> then use an array
+
+
+  Time
+                          Arrays          Singly Linked Lists
+    Lookup
+      By index            O(1)            O(n)
+      By value            O(n)            O(n)
+
+    Insert
+      beginning/end       O(n)            O(1)
+      middle              O(n)            O(n)
+
+    Delete
+      beginning           O(n)            O(1)
+      middle              O(n)            O(n)
+      end                 O(n)            O(n)
+
+
+    These time complexities become relevant when
+    working with a large data structure, such
+    as a million elements.
+
+types of linked lists
+
+  * singly
+    // every node has a reference to the next node
+
+  * doubly
+    // every node has a reference to the previous and the next node
+
+  The benefit is
+  deleting from the end is O(n) for a singly
+
+  Deleting in a doubly is O(1)
+
+  However every feature comes with a cost,
+  each node has an extra field
+  so doubly take more space but you get a performance gain.
+
+  * Circular
+    // Both singly and doubly can be circular
+
+    Meaning that the last node will reference the first node
+
+    The benefit is for a music player for example,
+    it'll start over.
+
+
+
+exercise - reversing a linked list
+
+  ex:
+    10 -> 20 -> 30
+
+    We need to change the direction of the links
+
+    10 <- 20 <- 30
+
+    list.reverse();
+    // reverses it in place
+
+  So my solution
+  -
+  For reversing it in place
+  in a singly linked list
+
+  requires that we have two nodes while traversing
+
+  // not efficient
+  // O(n^2)
+
+  public void reverse() {
+        boolean isReversing = true;
+        Node current = this.last;
+
+        while (isReversing) {
+            Node previous = this.predecessor(current);
+            current.next = previous;
+
+            current = previous; // for the next iteration
+
+            if (previous == null) {
+                isReversing = false;
+            }
+
+        }
+        // need to swap the first and last pointers
+        Node temp = this.last;
+        this.last = this.first;
+        this.first = temp;
+    }
+
+    public Node predecessor(Node node) {
+        if (node == this.first)
+            return null;
+
+        Node current = this.first;
+        while (current != null) {
+            if (current.next == node) {
+                return current;
+            }
+            current = current.next;
+        }
+        return null;
+    }
+
+    --------
+
+    updated solution
+
+    public void reverse() {
+        Node previous = this.first;
+        Node current = this.first.next;
+
+        while (current != null) {
+            Node next = current.next;
+            current.next = previous;
+            previous = current;
+            current = next;
+        }
+        this.last = this.first;
+        this.last.next = null;
+        this.first = previous;
+    }
+
+
+
+solution - reversing a linked list
+
+  Mosh's solution
+  // much cleaner,
+  // use two nodes to traverse through,
+  // O(n)
+
+  public void reverse() {
+    var previous = first;
+    var current = first.next;
+
+    last = first;
+    last.next = null;
+    while (current != null) {
+      var next = current.next;
+      current.next = previous;
+      previous = current;
+      current = next;
+    }
+    first = previous;
+
+  }
+
+  NOTE:
+    Lines that are highly related should be
+    next to each other.
+
+  // cleaner implementation
+
+  public void reverse() {
+    if (isEmpty()) return;
+
+    var previous = first;
+    var current = first.next;
+    while (current != null) {
+      var next = current.next;
+      current.next = previous;
+      previous = current;
+      current = next;
+    }
+
+    last = first;
+    last.next = null;
+    first = previous;
+  }
+
+  NOTE:
+    Whenever you test your code,
+    consider different edge cases.
+
+    even # of elements,
+    odd #,
+    empty list,
+    one element,
+
+
+exercise - kth node from the end
+
+  Kth node
+
+  Ex:
+  10 -> 20 -> 30 -> 40 -> 50
+
+  Instead of finding the kth node
+  from the end,
+
+  Try to find the 3rd to the end.
+
+  -
+  We can't iterate through entire list
+  to find the size.
+  // if linked list is a million elements
+
+  A lot of linked list problems
+  can be solved by having two pointers.
+
+  Ex:
+    Find 3rd to last
+
+    10 -> 20 -> 30 -> 40 -> 50
+    *            *
+
+    // next iteration
+
+    10 -> 20 -> 30 -> 40 -> 50
+                *            *
+
+
+  Keep moving pointers forward
+  until the second pointer reaches
+  the end and the first pointer
+  will be at the target node.
+
+
+  public int getKthFromEnd(int k) {
+        if (k <= 0) return -1;
+        Node first = this.first;
+        Node second = this.first;
+        int distance = k - 1;
+
+        int index = 0;
+        while (index < distance) {
+            if (second.next == null) return -1;
+            second = second.next;
+            index++;
+        }
+
+        while (second.next != null) {
+            second = second.next;
+            first = first.next;
+        }
+        System.out.println("second value is ");
+        System.out.println(second.value);
+        return first.value;
+    }
+
+
+
+solution - kth node from the end
+
+  Mosh's solution
+
+  public int getKthFromTheEnd(int k) {
+    if (isEmpty()) {
+      throw new IllegalStateException();
+    }
+    var a = first;
+    var b = first;
+    for (int i = 0; i < k - 1; i++) {
+      b = b.next;
+      if (b == null)
+        throw new IllegalArgumentException();
+    }
+    while (b != last) {
+      a = a.next;
+      b = b.next;
+    }
+    return a.value;
+  }
+
+
+summary

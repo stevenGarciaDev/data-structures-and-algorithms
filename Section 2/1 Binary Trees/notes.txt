@@ -1,0 +1,690 @@
+introduction
+
+What are Binary Trees?
+
+Exercise - Populating a Binary Search tree
+
+Exercise - Building a Tree
+
+solution - insert()
+
+solution - find()
+
+traversing trees
+
+exercise - tree traversal
+
+recursion
+
+depth first traversals
+
+depth and height of nodes
+
+minimum value in a tree
+
+exercise - equality checking
+
+solution - equality checking
+
+exercise - validating binary search trees
+
+solution - validating binary search trees
+
+exercise - nodes at K distance
+
+solution - nodes at K distance from the root
+
+level order traversal
+
+trees - exercises
+
+summary
+
+/* --------------
+
+Non-linear data structures
+
+--
+
+Questions Overview
+-
+0) Create class for Binary Search Tree and inner class for Node.
+
+1) Implement the find() method for a Binary Search Tree, iteratively.
+
+2) Implement the insert() method for a Binary Search Tree, iteratively.
+
+3) Implement traversals for pre-order, in-order, and post-order.
+
+4) How do you calculate the height of a node?
+  Implement height().
+
+5) Implement the min() for a binary tree and then for a binary search tree.
+
+6) Implement equals() to see if two binary search trees contain the same values.
+
+7) Implement validate() to ensure that a binary tree is a binary search tree.
+
+8) Implement k distance to print out all nodes at k distance from root.
+
+9) Implement solutions for Exercise pdf.
+
+
+----
+
+
+introduction
+
+  Most important non-linear data structure since
+  it has the most use cases such as in
+  databases, websites, graphical user interfaces, etc.
+
+  // also tricky interview questions
+
+
+What are Binary Trees?
+
+  Tree is a data structure that stores elements
+  in a hierarchy.
+
+  Nodes (data points) and edges.
+
+  Top node is the root.
+
+  Where would you use a tree data structure?
+
+    * represent hierarchical data
+    * databases
+      // database management systems use
+      // trees for indexing
+    * autocompletion
+      // past web searches
+    * compilers
+      // use a syntax tree
+      // to parse expressions
+    * compressions
+      JPEG, MP3
+
+
+  Operations you can perform on Binary Search Tree,
+
+    Benefit is that you can quickly find a value
+    in O(log n) assuming the tree is balanced.
+
+  NOTE:
+  Whenever we throw out half of our items
+  and narrow down our search
+  for each iteration.
+    => logarithmic time complexity
+
+  For every step, the data set is cut in half.
+
+  Lookup O(log n)
+
+  Insert O(log n)
+
+  Delete O(log n)
+
+  So trees outperform arrays and linked list.
+  // assuming it's properly implemented
+
+Exercise - Populating a Binary Search tree
+
+  Tree class
+  with a root field.
+  Have two operations,
+  insert(val) and find(val)
+
+  and have a private inner class, Node.
+
+  Node should have references to
+  parent, value, left, and right
+
+
+  // interviews don't usually ask about removing
+  // a node from a tree since it's complex
+  // and takes a lot of code to do
+
+
+  NOTE: first need to find a node,
+    lookup a value and use that to find the
+
+
+Exercise - Building a Tree
+
+solution - insert()
+
+  Mosh's implementation
+
+  insert(val) {
+    let node = new Node(val);
+    if (this.root === null) {
+      this.root = node;
+      return;
+    }
+
+    let current = root;
+    while (true) {
+      if (val < current.value) {
+        if (current.leftChild === null) {
+          current.leftChild = node;
+          break;
+        }
+        current = current.leftChild;
+      } else {
+        if (current.rightChild === null) {
+          current.rightChild = node;
+          break;
+        }
+        current = current.rightChild;
+      }
+    }
+  }
+
+  NOTE:
+  deleting from a binary search tree is not common
+  in interviews
+
+
+
+solution - find()
+
+  // same as code that I implemented
+
+
+traversing trees
+
+  Non-linear structures.
+
+  So two categories to walk the tree
+
+    Breadth First
+
+    Depth First
+
+  BFS
+    // aka level order traversal
+    Means that we visit all nodes
+    on the same level before
+    moving on to the next level.
+
+  Depth First
+    * pre-order
+    * in-order
+    * post-order
+
+  Pre-order
+    root, left, right
+
+  in-order
+    left, root, right
+
+  post-order
+    left, right, root
+
+
+  function preOrder(node) {
+    if (node === null) return;
+    console.log(node.value);
+    preOrder(node.left);
+    preOrder(node.right);
+  }
+
+  // ascending order
+  function inOrder(node) {
+    if (node === null) return;
+    inOrder(node.left);
+    console.log(node.value);
+    inOrder(node.right);
+  }
+
+  // to be descending,
+  // we simply visit,
+  // right, root, left
+
+
+  ---
+
+  function postOrder(node) {
+    if (node === null) return;
+    postOrder(node.left);
+    postOrder(node.right);
+    console.log(node.value);
+  }
+
+  NOTE:
+  For many problems involving trees, you often
+  want to begin by traversing through the leaf nodes
+  first
+  and pass those values up the tree until we reach the root.
+
+
+exercise - tree traversal
+
+  Always keep in mind that the current node,
+  is the only node you should keep in context when
+  performing these tree traversals.
+
+  Follow its corresponding pattern.
+
+recursion
+
+  Recursion is a programming technique for implementing
+  repetition.
+
+  So recursion occurs when a function calls itself.
+
+  You need a base case to stop the recursive calls
+  otherwise will experience a stack overflow through
+  infinite function calls.
+
+  // base condition
+
+  For the factorial of a number.
+
+
+  4! = 4 * 3 * 2 * 1
+
+  function factorial(n) {
+    if (n === 0)
+      return 1;
+    return n * factorial(n-1);
+  }
+
+
+  So recursive calls' values are kept in a stack.
+
+depth first traversals
+
+  // same implementation
+
+depth and height of nodes
+
+  Depth =>
+    the depth increases as you go down a tree towards the leafs
+
+    Think of depth as the amount of edges up until the root.
+
+    So start counting
+
+    ^
+    |
+
+  Height =>
+    Count the longest path from a node to the furthest leaf.
+
+    So start counting down
+
+    |
+    V
+
+
+  So you can calculate the height of a node.
+
+  1 + max(height( leftSubtree ), height( rightSubtree ))
+
+
+  We have used post order traversal,
+  -> visit the leaves first and pass their height value up
+
+  And keep repeating until we reach the root node.
+
+  height() {
+    return height(root);
+  }
+
+  private height(Node root) {
+    if (root === null)
+      return -1;
+
+    // stop when we reach a leaf node
+    if (root.leftChild === null && root.rightChild === null)
+      return 0;
+
+    return 1 + Math.max(height(root.left)), height(root.right));
+  }
+
+
+  NOTE: With recursion, often just use the 'formula'
+        for the recursive call.
+
+        The way to solve recursion, is to not think about it.
+
+        Consider only the base condition, the step condition,
+        and the recursive call which uses a 'formula'.
+
+  Another way to calculate the height for example.
+
+  height(root) {
+    if (root === null) {
+      return -1;
+    }
+
+    const leftHeight = this.height(root.left);
+    const rightHeight = this.height(root.right);
+
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+
+
+minimum value in a tree
+
+  So we'll follow recursion where we can take a
+  large complex problem and break it up
+  into smaller problems.
+
+  So to find the minimum value in a tree,
+
+  NOTE:
+    Not for a binary search tree.
+    This is for a binary tree.
+
+  Find the minimum value for the left and right subtrees.
+
+  Use post-order traversal.
+
+  So we start with the leaf nodes.
+
+
+
+
+  min() {
+    return min(root);
+  }
+
+
+  private min(Node root) {
+    // base condition is when we get to a leaf node
+    if (isLeaf(root))
+      return root.val;
+
+    let left = min(root.leftChild);
+    let right = min(root.rightChild);
+
+    return Math.min(Math.min(left, right)), root.val);
+  }
+
+  isLeaf(Node node) {
+    return node.leftChild === null && node.rightChild === null;
+  }
+
+
+  ----
+
+  to find the min value of a binary search tree
+
+  minBST() {
+    if (root === null)
+      throw new Error('Illegal state exception');
+
+    let current = root;
+    let last = current;
+    while (current !== null) {
+      last = current;
+      current = current.leftChild;
+    }
+    return last.value;
+  }
+
+  So the time complexity of finding the min of a binary tree
+  is O(n)
+
+  The time complexity for finding the min of a binary search
+  tree is O(h)
+  or O(logn)
+
+
+exercise - equality checking
+
+  Write code to check two trees for equality.
+
+  Implement method
+
+  equals(Tree)
+    // returns a boolean
+
+  compare two nodes and ensure that they are equal,
+  and ensure that their left and right subtrees are
+  also equal
+
+
+
+solution - equality checking
+
+  Mosh's implementation
+
+  equals(Tree other) {
+    return this.equals(this.root, other.root);
+  }
+
+  private equals(Node first, Node second) {
+    if (first === null && second === null)
+      return true;
+
+    if (first !== null && second !== null) {
+      return first.value === second.value
+        && equals(first.leftChild, second.leftChild)
+        && equals(first.rightChild, second.rightChild);
+    }
+    return false;
+  }
+
+exercise - validating binary search trees
+
+  Given a binary tree,
+  validate whether it's a binary search tree.
+
+  For every node look at its left and right subtrees.
+
+  However it's a costly implementation as
+  you visit nodes multiple times.
+
+  There's a better way to traverse the tree.
+
+  Determine the range for each Node.
+
+  So this way enables you to visit each Node only once.
+
+  Have three params,
+  node, minValue, maxValue
+
+  Use recursion to recursively traverse the tree.
+
+  Use pre-order since we visit the root node first.
+
+
+solution - validating binary search trees
+
+  Mosh's implementation
+
+  // use hardcoded values for example,
+  isBinarySearchTree() {
+    this.isBinarySearchTree(this.root, -10000, 10000)
+  }
+
+  private isBinarySearchTree(root, minValue, maxValue) {
+    if (root === null)
+      return true;
+
+    if (root.value < minValue || root.value > maxValue)
+      return false;
+
+    return isBinarySearchTree(root.leftChild, minValue, root.value - 1)
+            && isBinarySearchTree(root.leftChild, root.value + 1, maxValue);
+  }
+
+
+exercise - nodes at K distance
+
+  Print the nodes at a given distance from the root.
+
+  NOTE:
+  When it comes to trees,
+  ALWAYS think about recursion.
+
+  Think what is the simplest input?
+
+  This helps you determine the base condition.
+
+  IN this case it's when the distance = 0,
+  as it'll just be the root node.
+
+  Params should take in the root node of a tree
+  and a distance parameter.
+
+  my code:
+
+  function findNodesAtDistance(root, k) {
+    if (root === null)
+      return;
+
+    if (k === 0)
+      console.log(root.value);
+      return;
+
+    return findNodesAtDistance(root.left, k - 1) &&
+      findNodesAtDistance(root.right, k - 1);
+  }
+
+
+solution - nodes at K distance from the root
+
+  public void printNodesAtDistance(int distance) {
+    printNodesAtDistance(root, distance);
+  }
+
+  private void printNodesAtDistance(Node root, int distance) {
+    if (root == null)
+      return;
+
+    if (distance == 0) {
+      System.out.println(root.value);
+      return;
+    }
+
+    printNodesAtDistance(root.leftChild, distance - 1);
+    printNodesAtDistance(root.rightChild, distance - 1);
+  }
+
+
+level order traversal
+
+  Tree traversal algorithms classify as being
+  breadth first or depth first.
+
+  Let's consider breadth first,  (level order traversal).
+
+  Basically we just print level by level.
+
+  We need to know how many levels we have.
+  -> based on the height property
+
+  Every node has a height property.
+
+  Leaf has a height of 0.
+
+  The height of the tree is based on the height of the root.
+  Which is calculated based on the number of edges
+  in the longest path to a leaf node.
+
+  Once we have the height, we can use a for loop to
+  print nodes at each level.
+
+  Ex:
+
+  public void traverseLevelOrder() {
+    for (var i = 0; i <= height(); i++) {
+      var list = getNodesAtDistance(i);
+      for (var value: list) {
+        System.out.println(value);
+      }
+    }
+  }
+
+trees - exercises
+
+  Tree.size()
+
+  // to count the size of a binary tree
+
+  getSize() {
+    return this.size(this.root);
+  }
+
+  size(root) {
+    if (root === null)
+      return 0;
+
+    return 1 + this.size(root.left) + this.size(root.right);
+  }
+
+  -
+  // to count the leafs of a tree
+
+  getLeavesCount() {
+    return this.countLeaves(this.root);
+  }
+
+  countLeaves(root) {
+    if (root === null)
+      return 0;
+
+    if (root.left === null && root.right === null) {
+      return 1;
+    }
+
+    return this.countLeaves(root.left) + this.countLeaves(root.right);
+  }
+
+  --
+
+  // recursive method to find the max value in a binary search tree
+
+  findMax(root) {
+    if (root.right === null)
+      return root.value;
+
+    return this.findMax(root.right);
+  }
+
+  ---
+  // contains() implement recursively
+
+  contains(root, n) {
+    if (root.value === null)
+      return false;
+
+    if (root.value === n) {
+      return true;
+    }
+
+    return this.contains(root.left, n) || this.contains(root.right, n);
+  }
+
+  --
+
+  // areSiblings()
+  // basically do they have the same parent
+
+  areSiblings(root, value1, value2) {
+    if (root === null) {
+      return false;
+    }
+
+    const leftChild = root.left;
+    const rightChild = root.right;
+
+    if ((leftChild === value1 && rightChild === value2)
+      || (leftChild === value2 || rightChild === value1)) {
+      return true;
+    } else {
+      return areSiblings(root.left, value1, value2)
+        || areSiblings(root.right, value1.value2);
+    }
+  }
+
+
+
+
+summary

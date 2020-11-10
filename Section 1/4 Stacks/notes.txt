@@ -1,0 +1,278 @@
+What are stacks
+
+Working with stacks
+
+exercise - reversing a string
+
+solution - reversing a string
+
+exercise - balanced expressions
+
+solution - balanced expressions
+
+solution - supporting other brackets
+
+solution - first refactoring
+
+solution - second refactoring
+
+exercise - building a stack using an array
+
+solution - implementing a stack using an array
+
+stacks - exercises
+
+summary
+
+/* -------------
+
+What are stacks
+
+  Powerful data structures used to solve
+  complex coding problems
+
+  some use cases
+
+    * implement the undo feature
+    * build compilers (syntax checking)
+      // use stacks to parse the syntax of expressions
+    * evaluate expressions
+    * build navigation (forward/back)
+
+
+  Structure
+    -> think of a stack of books
+
+    Last In First Out (LIFO)
+
+  Internally we use an array or linked list.
+
+  So a stack is essentially a wrapper around
+  an array or linked list
+  that gives us a different way of storing
+  and accessing objects.
+
+  Stacks have 4 operations
+
+    - push(item)
+    - pop()
+    - peek()
+    - isEmpty()
+
+  For runtime complexity,
+  O(1) for all operations
+
+Working with stacks
+
+  import java.util.Stack;
+
+  ...
+  Stack<Integer> stack = new Stack<>();
+  stack.push(10);
+  stack.push(20);
+  stack.push(30);
+  System.out.println(stack);;
+
+  var top = stack.pop();
+  System.out.println(top);
+
+  boolean isEmpty = stack.empty();
+
+
+
+exercise - reversing a string
+
+  String str = "abcd";
+
+  SO,
+  whenever you are solving a problem that requires
+  going back, or doing something in reverse order
+    => stacks are to be used
+
+    public static void main(String[] args) {
+  	    String str = "abcd";
+  	    Stack<Character> stack = new Stack<>();
+  	    for (int i = 0; i < str.length(); i++) {
+  	        char letter = str.charAt(i);
+  	        stack.push(letter);
+          }
+
+  	    while (!stack.empty()) {
+  	        char topLetter = stack.pop();
+              System.out.print(topLetter);
+          }
+      }
+
+solution - reversing a string
+
+  Must consider the edge cases,
+  such as an empty string, null,
+
+exercise - balanced expressions
+
+  Examine the string and ensure all
+  brackets are closed.
+
+  Such as ( )
+  <>, [], {}
+
+  The order matters too.
+
+  Iterate through the string,
+  when encounter a closing bracket,
+  we need to know what the most recent opening
+  bracket was.
+
+  -> this can be achieved through the stack data structure
+
+  Opening brackets are pushed to the stack.
+
+
+
+solution - balanced expressions
+
+  Mosh's solution
+  -
+
+  Narrow down the scope of the problem and
+  only focus on parenthesis.
+
+  Then expand to support other types of brackets.
+
+  public class Expression {
+    public boolean isBalanced(String input) {
+      Stack<Character> stack = new Stack<>();
+
+      for (char ch: input.toCharArray()) {
+        if (ch == '(')
+          stack.push(ch);
+
+        if (ch == ')')
+          if (stack.empty()) return false;
+          stack.pop();
+
+        return stack.empty();
+      }
+    }
+  }
+
+  Write a list of edge cases
+    -
+    (
+    (()
+    )(
+
+solution - supporting other brackets
+
+
+  public class Expression {
+    public boolean isBalanced(String input) {
+      Stack<Character> stack = new Stack<>();
+
+      for (char ch: input.toCharArray()) {
+        if (ch == '(' || ch == '<' || ch == '[' || ch == '{')
+          stack.push(ch);
+
+        if (ch == ')' )
+          if (stack.empty()) return false;
+          var top = stack.pop();
+          ....
+
+        return stack.empty();
+      }
+    }
+  }
+
+
+  Solution was to have a multiple conditional if statement
+  for each case of opening/closing brackets.
+  // using ||
+
+solution - first refactoring
+
+  Refactor step by step.
+
+  Extract long conditionals into a private helper method.
+
+  isLeftExpression()
+  for determining if the character should be pushed
+  onto the stack.
+
+  private boolean isLeftBracket(char ch) {
+    return ch == '(' || ch == '<' || ch == '[' || ch == '{';
+  }
+
+  isRightExpression()
+  For determining if we need to pop off the stack and compare
+  the characters.
+
+
+  private boolean bracketsMatch(char left, char right) {
+    return (right == ')' && left != '(') ||
+          .....
+  }
+
+solution - second refactoring
+
+  Want to refactor long boolean expressions.
+
+  Put it into an ArrayList and check to see if it contains
+  the current character.
+
+
+  private boolean isLeftBracket(char ch) {
+    // can pass a varying number of arguments
+    var leftBrackets = Arrays.asList('(', '<', '[', '{');
+    return leftBrackets.contains(ch);
+  }
+
+  One problem is that it creates a new ArrayList in memory,
+  so instead make it a private instance and
+  initialize it once.
+
+  private List<Character> leftBrackets = Arrays.asList('(', '<', '[', '{');
+
+  private boolean isLeftBracket(char ch) {
+    // can pass a varying number of arguments
+    return this.leftBrackets.contains(ch);
+  }
+
+exercise - building a stack using an array
+
+  Can implement using an array of a linked list.
+
+  Stack with the operations
+    // push
+    // pop
+    // peek
+    // isEmpty
+
+  Internally use int[]
+
+  Handle the scenario when the stack gets full.
+
+  -
+
+
+solution - implementing a stack using an array
+
+  ...
+
+  @Override
+  public String toString() {
+    // copy the content into a separate array
+    var content = Arrays.copyOfRange(items, 0, count);
+    return Arrays.toString(content);
+  }
+
+stacks - exercises
+
+summary
+
+  LIFO
+  // use them in in situations when we want
+  // to undo or do things in reverse order
+
+  can be implemented using arrays or linked lists
+
+  all operations run in O(1)

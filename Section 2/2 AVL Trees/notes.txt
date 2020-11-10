@@ -1,0 +1,710 @@
+introduction
+
+balanced and unbalanced trees
+
+rotations
+
+AVL trees
+
+Exercise: AVL rotations
+
+Exercise: Building an AVL trees
+
+Solution: Insert()
+
+Exercise: Height Calculation
+
+Solution: Height Calculation
+
+Exercise: Balance Factor
+
+Solution: Balance Factor
+
+Solution: Detecting Rotations
+
+Solution: Detecting Rotations
+
+Solution: Implementing Rotations
+
+Solution: Implementing Rotations
+
+AVL Trees: Exercises
+
+Summary
+
+/* ----------------
+Questions Overview
+
+
+
+/* ----------------
+
+introduction
+
+  Searching for a value in Binary Search Tree is O(log n)
+  // only if the tree is balanced
+  otherwise will become O(n)
+
+  AVL trees ensure that the tree is balanced
+
+balanced and unbalanced trees
+
+  In a balanced tree.
+
+  height(left) - height(right) <= 1
+
+  A perfect tree is a tree where every level
+  if full.
+  (except for the last level)
+
+  In reality, trees are not 'perfect'.
+
+  Often not perfectly balanced.
+
+  So we want the heights of the left and
+  right subtrees to only differ by at most
+  1 level.
+
+  It'll have a tendency to become
+  left skewed or right skewed.
+
+  -> they are linked list in this case,
+  // not binary search trees
+
+
+  How do our trees become imbalanced?
+
+    => This occurs when we insert
+    values in a sorted order.
+    // ascending or descending
+
+
+  There are different types of self-balancing trees.
+
+    * AVL trees
+      // the tree rebalanced themselves
+
+    * red-black trees
+
+    * B-trees
+
+    * splay trees
+
+    * 2-3 trees
+
+  Don't come up in interviews.
+  Most software engineers don't know all trees.
+
+
+rotations
+
+  AVL trees are special type of binary search trees
+  which automatically rebalance themselves
+  every time we add or remove nodes.
+
+  They ensure that the difference
+  in the heights of the left and right subtrees
+  is never more than one.
+
+  If the difference is greater than one,
+  then they will rebalance themselves
+  by performing a rotation.
+
+  Types of rotations.
+
+    * left
+    * right
+    * left-right
+    * right-left
+
+  The rotation that you perform depends
+  on which side of the tree is heavy.
+
+  Left Rotation
+
+    (1)
+      \
+        (2)
+          \
+            (3)
+
+  So to calculate the heights,
+  always start with the node that you
+  just added.
+
+  If right heavy, then need to perform a left rotation.
+
+  0(1)2
+    \
+      0(2)1
+        \
+          0(3)0
+
+
+  So node with the value of 1 is imbalanced.
+
+  Imagine putting a weight on the right heavy
+  node that is right heavy
+
+    *
+  0(1)2
+    \
+      0(2)1
+        \
+          0(3)0
+
+    // So the weight drops it
+
+      (2)
+      / \
+    (1)  (3)
+
+
+  Right Rotation
+
+      (3)
+      /
+    (2)
+    /
+  (1)
+
+  Calculate at which node you
+  have an imbalance.
+
+
+        2(3)0
+        /
+      1(2)0
+      /
+    0(1)0
+
+  So need to put a weight on the imbalanced node.
+
+        *
+      2(3)0
+      /
+    1(2)0
+    /
+  0(1)0
+
+
+  // So the weight drops it
+
+    (2)
+    / \
+  (1)  (3)
+
+
+  Left-right rotation
+  (double rotation)
+
+      (10)
+      /
+    (5)
+      \
+      (7)
+
+    There are times when you can't
+    rebalance a tree using a left or
+    right rotation.
+
+  Need to combine these rotations.
+
+  So start by calculating the height.
+
+
+      2(10)0
+      /
+    0(5)1
+      \
+      0(7)0
+
+  So the imbalance is in the left child,
+  right subtree.
+
+  So perform a left rotation, followed
+  by a right rotation.
+
+    /
+   v
+    then
+        \
+         v
+
+    So first we perform a left rotation
+    on the node with the value of 5.
+
+  The 5 should go down and the 7 should go up.
+
+  It's like putting a weight on 5.
+
+
+    2(10)0
+    /
+    *
+  0(5)1
+    \
+    0(7)0
+
+    becomes
+
+
+      (10)
+      /
+    (7)
+    /
+  (5)
+
+  Now have a left heavy tree.
+  and need to use a right rotation.
+
+
+  Right Left rotation
+
+    So here the imbalance
+    is in the right child,
+    left subtree.
+
+     (5)
+       \
+        (10)
+        /
+      (7)
+
+    So find the heights.
+
+    0(5)2
+      \
+       1(10)0
+       /
+     0(7)0
+
+
+    To now put a weight on the
+    imbalanced right child.
+
+    (5)
+      \
+       (7)
+          \
+          (10)
+
+    So now a left rotation.
+
+      (7)
+    /    \
+   (5)  (10)
+
+
+AVL trees
+
+  After performing an insertion,
+  you begin calculating the height
+  of the node that you just inserted.
+
+  ...
+
+
+Exercise: AVL rotations
+
+  Completed
+
+Exercise: Building an AVL trees
+
+  Create class AVLTree
+    within it have a private class AVLNode
+
+    Implement the insert() recursively
+    // like a binary search class
+
+  // for now don't worry about balancing the tree
+
+
+Solution: Insert()
+
+  // consider the scenarios
+  // if the tree is empty,
+  // and consider the conditionals
+  insert(root, value) {
+    if (root === null) {
+      return new AVLNode(value);
+    }
+
+    if (value < root.value) {
+      root.left = insert(root.left, value);
+    } else {
+      root.right = insert(root.right, value);
+    }
+
+    return root;
+  }
+
+
+  NOTE: To test your code, walk through your code
+  using a debugger.
+
+  So can check its execution step by step.
+
+Exercise: Height Calculation
+
+  Now need to be able to calculate the height
+  of every node.
+
+  And check the balance factor.
+
+  Introduce a new field for the AVLNode class,
+  for the height.
+
+  When we insert the new node, we should update the heights
+  of all the parents of that new node.
+
+
+  // root.height = MAX(left, right) + 1;
+
+Solution: Height Calculation
+
+Exercise: Balance Factor
+
+  Need to check to see if our tree is unbalanced.
+
+  So after we insert a new node.
+  After we set the height, we need to compare
+  the left and right subtrees and ensure that
+  the difference is not more than 1.
+
+  // balanceFactor = height(left) - height(right);
+
+  if balance factor > 1
+    then the tree is left heavy
+
+    Example:
+    5 - 3 = 2
+
+  balance factor < -1
+    then the tree is right heavy
+
+
+
+Solution: Balance Factor
+
+  NOTE: One way to make code a bit cleaner
+    is to make helper methods for the conditionals.
+
+
+    isLeftHeavy(node) {
+      return this.balanceFactor(node) > 1;
+    }
+
+    isRightHeavy(node) {
+      return this.balanceFactor(node) < -1;
+    }
+
+
+    balanceFactor(node) {
+      return (node === null) ? 0 : height(node.leftChild) - height(node.right);
+    }
+
+    ---
+
+    so now within the insert method becomes
+
+    const balancedFactor = this.balanceFactor(root);
+    if (this.isLeftHeavy(root)) {
+      //
+    } else if (this.isRightHeavy(root)) {
+      //
+    }
+
+Exercise: Detecting Rotations
+
+  Right skewed
+
+  10
+    \
+    20
+      \
+        30
+
+    So we do a left rotate on 10.
+
+    leftRotate(10)
+
+
+  10
+    \
+      30
+      /
+    20
+
+    rightRotate()
+    leftRotate()
+
+    Since the imbalance is a right child,
+    left subtree.
+
+    On which nodes?
+
+    rightRotate(30)
+
+  So then it'll become
+
+  10
+    \
+      30
+      /
+    20
+
+    to
+
+    10
+      \
+        20
+          \
+            30
+
+
+    leftRotate(10)
+
+  --
+
+  So to detect what rotation we need,
+  we must find out what is the shape
+  of our tree.
+
+  We use the balance factor to determine
+  our rotations.
+
+  so if
+
+  10
+    \
+     30  (1)  balanceFactor(root.right) > 0
+    /
+    20
+
+
+  So in the insert method,
+  extend the logic,
+  and print the rotation that we need.
+
+Solution: Detecting Rotations
+
+  So print out the rotation that we need.
+
+  Mosh's Solution:
+
+  Abstract the insert method by creating helper methods.
+
+
+
+
+
+  private void balance(AVLNode root) {
+    if (isLeftHeavy(root)) {
+      System.out.println(root.value + " is left heavy");
+
+      if (balanceFactor(root.leftChild) < 0) {
+        System.out.println("Left Rotate " + root.leftChild.value);
+      }
+      System.out.println("Right Rotate " + root.value);
+
+    } else if (isRightHeavy(root)) {
+
+      if (balanceFactor(root.rightChild) > 0) {
+        System.out.println("Right Rotate " + root.rightChild.value);
+      }
+      System.out.println("Left Rotate " + root.value);
+    }
+  }
+
+Exercise: Implementing Rotations
+
+  10
+    20
+      30
+
+    So perform leftRotate(10)
+
+    SO
+
+  10 root
+    20 newRoot
+      30
+
+
+    So to perform a left rotate on the 10.
+    Make the 10, the left child of the 20.
+
+    newRoot = root.right;
+    newRoot.left = root;
+
+  But what if the right child already has a
+  left child?
+
+  For example:
+
+  10
+    \
+     20
+     /  \
+    15  30
+
+    Then it'll become
+
+      20
+    /    \
+  10    30
+    \
+    15
+
+  So the code.
+
+  newRoot = root.right;
+  root.right = newRoot.left;
+  newRoot.left = root;
+
+     20
+    /   \
+  10    30
+    \
+    15
+
+  So whenever perform a rotation,
+  should recalculate the height
+  of the root and the newRoot.
+
+  // reset the height of the root and newRoot
+
+  Also private void balance(AVLNode root)
+
+  should return an AVLNode.
+
+
+  implement
+
+  @return AVLNode
+  rotateLeft(AVLNode)
+
+  @return AVLNode
+  rotateRight(AVLNode)
+
+
+  Then in the balance()
+  instead of printing, call the rotate methods
+  and return the new root in that method
+
+  and reassign
+
+
+  rotateLeft(root) {
+    let newRoot = root.right;
+    root.right = newRoot.left;
+    newRoot.left = root;
+    root = newRoot;
+    return root;
+  }
+
+  rotateRight(root) {
+    let newRoot = root.left;
+    root.left = newRoot.right;
+    newRoot.right = root;
+    root = newRoot
+    return root;
+  }
+
+Solution: Implementing Rotations
+
+  // for setting the height of a node
+  private void setHeight(AVLNode node) {
+    node.height = Math.max(
+      height(root.leftChild),
+      height(root.rightChild)) + 1;
+  }
+
+  private AVLNode rotateLeft(AVLNode root) {
+    var newRoot = root.rightChild;
+
+    root.rightChild = newRoot.leftChild;
+    newRoot.leftChild = root;
+    // now reset the height
+    setHeight(root);
+    setHeight(newRoot);
+
+    return newRoot;
+  }
+
+  private AVLNode rotateRight(AVLNode root) {
+    var newRoot = root.leftChild;
+
+    root.leftChild = newRoot.rightChild;
+    newRoot.rightChild = root;
+
+    // now reset the height
+    setHeight(root);
+    setHeight(newRoot);
+
+    return newRoot;
+  }
+
+  in balance()
+
+  -
+
+  insert(root, value) {
+    if (root === null) {
+      return new AVLNode(value);
+    }
+
+    if (value < root.value) {
+      root.left = insert(root.left, value);
+    } else {
+      root.right = insert(root.right, value);
+    }
+
+    root.height = Math.max(
+      height(root.left),
+      height(root.right)) + 1;
+
+    root = balance(root);
+
+    return root;
+  }
+
+  private AVLNode balance(AVLNode root) {
+    if (isLeftHeavy(root)) {
+      if (balanceFactor(root.leftChild) < 0) {
+        root.leftChild = rotateLeft(root.leftChild);
+      }
+      return rotateRight(root);
+
+    } else if (isRightHeavy(root)) {
+
+      if (balanceFactor(root.rightChild) > 0) {
+        root.rightChild = rotateRight(root.rightChild);
+      }
+      return rotateLeft(root);
+    }
+    return root;
+  }
+
+AVL Trees: Exercises
+
+
+
+Summary
+
+  Review
+
+  Balanced and unbalanced trees
+
+  BST operations
+    Average: O(log n)
+    Worst: O(n)
+
+  Self-balancing trees
+
+    AVL trees
+    red black trees
+
+    Rotations:
+      Left, Right, Left-Right, and Right-Left

@@ -1,0 +1,771 @@
+Introduction
+
+What are Heaps
+
+Exercise - Working with Heaps
+
+Exercise - Building a Heap
+
+Solution - insert()
+
+Solution - remove()
+
+Solution - edge cases
+
+Heap Sort
+
+Priority Queues
+
+Exercise - Heapify
+
+Solution - Heapify
+
+Solution - Optimization
+
+Exercise - Kth largest item
+
+Solution - Kth largest item
+
+Heaps - Exercises
+
+Summary
+
+/* --------------
+Questions Overview
+
+1) Implement a class for a binary heap with the insert method.
+
+2) Implement the remove method.
+
+3)
+
+4)
+
+5)
+
+6)
+
+7)
+
+8)
+
+9)
+
+10)
+
+/* --------------
+
+Introduction
+
+  A type of binary tree with applications for
+  graph algorithms and sorting.
+
+What are Heaps
+
+  A binary heap with 2 properties.
+
+  1) A complete tree
+
+    Meaning that every level (except for the last)
+    is completely filled.
+    // having left and right children
+
+    And it's filled from left to right.
+
+  2) The value of every node is greater than
+    or equal to its children.
+
+    "the heap property"
+
+    // max-heap
+
+
+  A binary heap.
+
+  The applications of heaps.
+
+    * sorting (HeapSort)
+    * Graph Algorithms (shortest path between two nodes)
+      // this is the algorithm that powers GPS
+
+    * Priority queues
+    * finding the kth smallest/largest value
+      (popular interview question)
+
+  Operations
+
+  Ex:
+  [10, 5, 17, 4, 12]
+
+  Must satisfy the heap property.
+
+  So we insert a new value into a leaf node.
+  And if it's not in the right position,
+  then we'll move it up until it's in the right place.
+
+  10
+
+  then
+
+    10
+    /
+  5
+
+  it satisfies the heap property
+
+    10
+  /   \
+  5    17
+
+  17 does not satisfy the heap property so
+  it must bubble up.
+
+    17
+  /   \
+ 5     10
+
+
+     17
+    /   \
+   5     10
+  /
+ 4
+
+
+     17
+    /   \
+    5     10
+  /  \
+ 4   22
+
+ So 22 violates the heap property.
+ // swap with the parent
+
+         17
+        /   \
+      22     10
+     /  \
+    4   5
+
+          22
+         /   \
+       17     10
+      /  \
+      4   5
+
+
+    So now it's a valid binary heap.
+
+  The time complexity,
+  is based on the worst case.
+
+  So this would be the height of the tree,
+  given that a new node needs to bubble up
+  to the root in order to satisfy the
+  heap property.
+
+
+  Bubbling up the item,
+  is O(log n)
+
+  In a balanced binary tree,
+
+  h = log(n)
+
+  So the time complexity of searching for a value is O(log n).
+
+  For deletion in heaps,
+  we can only delete the root node.
+  Must fill it, such that it maintains a complete
+  tree.
+  // filled from the left,
+  // and must satisfy the heap property
+
+  If it violates the heap property,
+  then must bubble down.
+  // swap node values with the largest child
+
+  Removal
+  O(h) = O(log n)
+
+  Finding the max value in a max heap
+  is O(1).
+
+Exercise - Working with Heaps
+
+Exercise - Building a Heap
+
+  Implement them using an array.
+
+  It'll be more efficient with memory.
+
+                20 (0)
+              /   \
+        (1) 10     15 (2)
+          /   \
+      (3) 4    5 (4)
+
+  So can be referenced by their respective indexes in the array.
+
+  So need to find the children/parent of a node.
+
+
+  To reach the left child of a node.
+
+  Take the node's index.
+
+  root        -> n
+  leftChild   -> 2n + 1
+  rightChild  -> 2n + 2
+
+  // let parent be the index
+
+  left = parent * 2 + 1
+  right = parent * 2 + 2
+
+  TO reach the parent.
+
+  parent = (index - 1) / 2;
+
+
+  Create a heap class,
+  use an integer array as the heap.
+
+  Implement
+  insert(int)
+  remove() // removes the root node
+
+  NOTE: must bubble up || down
+    as to satisfy the heap property
+
+  So heaps are implemented as arrays,
+  but are thought of conceptually
+  as a binary tree.
+
+Solution - insert()
+
+  Mosh's solution
+
+  public void insert(int value) {
+    if (isFull())
+      throw new IllegalStateException();
+
+    items[size++] = value;
+
+    bubbleUp();
+  }
+
+  public boolean isFull() {
+    return size == items.length;
+  }
+
+  private void bubbleUp() {
+    var index = size - 1;
+    while (index > 0 && items[index] > items[parent(index)]) {
+      // then swap the items
+      swap(index, parent(index));
+      index = parent(index);
+    }
+  }
+
+  private int parent(int index) {
+    return (index - 1) / 2;
+  }
+
+  private void swap(int first, int second) {
+    var temp = items[first];
+    items[first] = items[second];
+    items[second] = temp;
+  }
+
+
+  ---
+
+  public static void main(String[] args) {
+    var heap = new Heap();
+    heap.insert(10);
+    heap.insert(5);
+    heap.insert(17);
+  }
+
+
+Solution - remove()
+
+  Mosh's implementation
+
+  // must consider the edge cases
+
+  public void remove() {
+    // always remove the root node
+    // so we move the value of the root node to be the last node
+    items[0] = items[size - 1];
+    size--;
+
+  }
+
+  // refer to ./JavaScript/heap.js
+  // for implementation
+
+  NOTE: For cleaner code, put your lengthy conditionals into
+        a private helper method.
+
+        The helper method should simply take some argument,
+        and return the boolean result.
+
+Solution - edge cases
+
+  // refer to heap.js file
+
+  Issue in
+
+  largerChildIndex()
+
+  In that it may be a leaf or only have a left child.
+
+  Must check,
+  and ensure that the calculated left index
+  and calculated right index is less than the size.
+
+  So have to create helper methods.
+
+  private boolean hasLeftChild(int index) {
+    return this.leftChildIndex(index) <= this.heapSize;
+  }
+
+  private boolean hasLeftChild(int index) {
+    return this.rightChildIndex(index) <= this.heapSize;
+  }
+
+  -
+
+  So not update the largerChildIndex() helper method.
+
+  private int largerChildIndex(int index) {
+    if (!this.hasLeftChild(index)) {
+      return index;
+    }
+
+    if (!this.hasRightChild(index)) {
+      return this.leftChildIndex(index);
+    }
+  }
+
+
+  -
+  now update helper method, isValidParent()
+  which currently assumes that it has two children.
+
+  Must account for scenario of no children or only
+  left child.
+
+  isValidParent(index) {
+    if (!this.hasLeftChild(index)) {
+      return true;
+    }
+
+    if (!this.hasRightChild(index)) {
+      return this.heap[index] >= this.leftChild(index);
+    }
+
+    return this.heap[index] > this.leftChild(index)
+            && this.heap[index] > this.rightChild(index);
+  }
+
+
+  When you have repeated expressions, (such as in conditionals)
+  consider creating a helper method for more readability.
+
+  // may need to reverse the condition for better naming convention
+
+
+  Extract into bubbleDown() method.
+
+  bubbleDown(index) {
+    // this loop details the bubbleDown process
+    while (index <= this.heapSize && !this.isValidParent(index)) {
+      // determine which child is larger,
+      // to find out which one should swap
+      let largerChildIndex = this.largerChildIndex(index);
+      this.swap(index, largerChildIndex);
+
+      // reset the index to the largerChildIndex
+      index = largerChildIndex;
+    }
+  }
+
+
+Heap Sort
+
+  An application of the heap data structure is to sort data.
+
+  You can use it to sort an unsorted array.
+
+  By continually removing the root value,
+  the elements will come out in descending order
+  for our MaxHeap.
+
+  Could also sort the array.
+
+  Ex:
+  // Mosh's implementation in Java
+
+  public static void main(String[] args) {
+    int[] numbers = { 5, 3, 10, 1, 4, 2};
+    var heap = new Heap();
+    for (var number : numbers) {
+      heap.insert(number); // sort in descending order
+    }
+    for (var i = 0: i < numbers.length; i++) {
+      numbers[i] = heap.remove(); // sort in descending order
+    }
+
+    System.out.println(Arrays.toString(numbers));
+  }
+
+
+  for (var i = numbers.length: i >= 0; i--) {
+    numbers[i] = heap.remove(); // sort in descending using a loop
+  }
+
+
+Priority Queues
+
+  Priority Queues,
+  elements are removed based on their priority.
+  // not when they join the queue
+
+  Operating system uses priority queues to schedule tasks.
+
+
+  The previous implementation is not efficient,
+  O(n) since worst case is that all other elements
+  need to be shifted.
+
+  And removal with the previous implementation
+  is O(1).
+
+  ----
+
+  A heap can also be used to implement a priority queue.
+
+  Insert operation in heap
+  O(log n)
+    // since need to bubble up
+    // and the worst case distance we have
+    // to travel is the height of the tree
+
+  Remove
+  O(log n)
+    // since need to bubbleDown
+    // and this is the worst case
+
+  So if you have a lot of insertions,
+  then it's more efficient to build a priority
+  queue using a heap.
+
+  Mosh's implementation
+
+  public class PriorityQueueHeap {
+    private Heap heap = new Heap();
+
+    // add
+    public void enqueue(int item) {
+      heap.insert(item);
+    }
+
+    // remove
+    public int dequeue() {
+      return heap.remove();
+    }
+
+    public boolean isEmpty() {
+      return heap.isEmpty();
+    }
+  }
+
+  So the PriorityQueueHeap class is
+  simply a wrapper around the Heap class.
+
+Exercise - Heapify
+
+  Popular interview question is the heapify algorithm means
+  to transform an array into a heap in-place.
+
+  Ex:
+    int[] numbers = { 5, 3, 8, 4, 1, 2 };
+    // heapify(array)
+
+    Basically need a for loop over the array,
+    and if it's not in the right position then
+    need to bubble it down.
+
+    So compare the element with both its children,
+    if invalid,
+    then swap with the larger one.
+
+    Recursively do this until the element is a valid parent.
+
+  Then back in main loop, go to the next element.
+
+  function heapify(arr) {
+    for (let i = 0; i < arr.length; i++) {
+
+      // then Recursively check if current element
+      // is a valid parent and satisfies the heap property
+      let leftChild = null;
+      let rightChild = null;
+      if (index * 2 + 1 < arr.length) {
+        leftChild = arr[index * 2 + 1];
+
+        if (index * 2 + 2 < arr.length) {
+          rightChild = arr[index * 2 + 2];
+        }
+      }
+
+      // check if valid parent
+      const parent = arr[index];
+      if (leftChild !== null && rightChild !== null
+        && parent > leftChild && parent > rightChild) {
+
+      }
+
+
+    }
+  }
+
+
+  // take in an array,
+  // modify array in place to satisfy the
+  // max heap property
+  function heapify(arr) {
+    // basically we loop through the array and
+    // perform the bubbleDown operation
+    for (let i = 0; i < arr.length; i++) {
+      const parent = arr[i];
+
+      // need to check if satisfies the heap property
+      // so need leftChild and right child
+
+      const leftChild = ((i * 2 + 1) > arr.length) ? arr[i * 2 + 1] : null;
+      const rightChild = ((i * 2 + 2) > arr.length) ? arr[i * 2 + 2] : null;
+
+      // now consider each case
+
+
+      // parent is leaf?
+      if (leftChild === null && rightChild === null) {
+        continue;
+      }
+
+      // parent has only left (no right)
+      if (rightChild === null) {
+        if (parent < rightChild) {
+          // then need to perform swap
+          swap(arr, i, i * 2 + 1);
+        }
+      }
+
+      // parent has both left and right, and
+      if (parent > leftChild && parent > rightChild) {
+        continue; // next iteration
+      } else {
+
+        // if parent does not satisfy the heap property
+        // find out which child is larger
+        if (leftChild > rightChild) {
+          swap(arr, i, i * 2 + 1);
+        } else {
+            swap(arr, i, i * 2 + 2);
+        }
+      }
+    }
+  }
+
+  function swap(arr, index1, index2) {
+    const temp = arr[index1];
+    arr[index1] = arr[index2];
+    arr[index2] = temp;
+  }
+
+Solution - Heapify
+
+  Mosh's implementation in Java
+
+  -
+
+  public class Main {
+    public static void main(String[] args) {
+      int[] numbers = { 5, 3, 8, 4, 1, 2 };
+      MaxHeap.heapify(numbers);
+      System.out.println(Arrays.toString(numbers));
+    }
+  }
+
+  public class MaxHeap {
+    public static void heapify(int[] array) {
+      for (var i = 0; i < array.length; i++) {
+        heapify(array, i);
+      }
+    }
+
+    private static void heapify(int[] array, int index) {
+      // assume default case, that it satisfies the heap property
+      var largerIndex = index;
+
+      var leftIndex = index * 2 + 1;
+      if (leftIndex < array.length && array[leftIndex] > array[largerIndex]) {
+        largerIndex = leftIndex;
+      }
+
+      var rightIndex = index * 2 + 2;
+      if (rightIndex < array.length && array[rightIndex] > array[largerIndex]) {
+        largerIndex = rightIndex;
+      }
+
+      if (index == largerIndex) {
+        return;
+      }
+
+      swap(array, index, largerIndex);
+
+      // then Recursively repeat this step
+      // since values at the indexes have been swapped now
+      heapify(array, largerIndex);
+    }
+
+    private static void swap(int[] array, int first, int second) {
+      var temp = array[first];
+      array[first] = array[second];
+      array[second] = array[first];
+    }
+  }
+
+Solution - Optimization
+
+  // the previous video's implementation is not optimal
+  // for the heapify algorithm
+
+  In a perfect binary tree, half
+  of the nodes are in the last level.
+
+  The inefficiency is here
+
+  for (var i = 0; i < array.length; i++) {
+    heapify(array, i);
+  }
+
+  We are calling the heapify method
+  for every element.
+
+  The purpose of heapify is to ensure
+  that every parent satisfies the
+  heap property.
+
+  This doesn't need to be performed
+  for the leaf nodes.
+
+  // remember,
+  // heapify works down the tree
+
+  So to optimize,
+  we only need to heapify the parent nodes.
+
+  So to get the index of the last parent node,
+  we use a formula.
+
+  n => total number of nodes (size)
+
+  lastParent = (n / 2) - 1
+
+  in other words
+
+  let lastParentIndex = (heapSize / 2) - 1
+
+
+  So we can change the bounds to
+  iterate over the parent nodes
+
+  for (var i = 0; i < array.length / 2 - 1; i++) {
+    heapify(array, i);
+  }
+
+  -
+  We can optimize it further.
+
+  We have a lot of recursion
+  with this implementation.
+
+  But we can change the direction of the
+  for loop,
+  which would lead to fewer recursions.
+
+  // as more will be in the correct position
+  // once the for loop gets up to the root
+
+  --
+
+
+  let lastParentIndex = array.length / 2 - 1;
+  for (var i = lastParentIndex; i >= 0; i--) {
+    heapify(array, i);
+  }
+
+
+
+Exercise - Kth largest item
+
+  Find the kth largest item/value in a list.
+
+  int[] numbers = { 5, 3, 8, 4, 1, 2 };
+
+  // so if k = 1
+  then return 8
+  since 8 is the largest value.
+
+  So could sort it,
+  O(nlogn) time complexity
+  then simply access by random access.
+
+  Or can perform heapify.
+  Then continually remove elements
+  from the max heap until proper kth count.
+
+  // assume within MaxHeap class
+  findKthValue(array, k) {
+    MaxHeap heap = new MaxHeap();
+    for (let elem of array) {
+      heap.insert(elem);
+    }
+    while (k > 1) {
+      heap.remove();
+    }
+    return heap.remove();
+  }
+
+
+Solution - Kth largest item
+
+  Mosh's solution
+
+Heaps - Exercises
+
+Summary
+
+  A heap is a complete binary tree
+  meaning that every level except for the
+  last are filled.
+
+  Filled from the left to the right.
+
+  Min-heap or max-heap.
+
+  Adding or removing an item
+  runs in O(logn)
+  where we bubble up or down.
+
+  Height is O(logn)
+  for insert and remove
+
+  Can't lookup values in heap,
+  only the min or max value.
+  Can read it in O(1)

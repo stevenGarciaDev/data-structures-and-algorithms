@@ -1,0 +1,31 @@
+Arrays
+
+Linked Lists
+
+  -> implement a singly linked list class
+    with inner Node class
+
+    interface
+      * addFirst
+      * addLast
+      * deleteFirst
+      * deleteLast
+      * contains
+      * indexOf
+      * size
+
+  -> name time complexity
+    a) lookup by value
+    b) lookup by index
+    c) insert in middle
+    d) deletion at beginning or end
+
+  -> implement reversing a singly linked lists
+  -> implement reversing a doubly linked lists
+  -> implement kth node from the end
+
+Stacks
+
+Queues
+
+Hash tables

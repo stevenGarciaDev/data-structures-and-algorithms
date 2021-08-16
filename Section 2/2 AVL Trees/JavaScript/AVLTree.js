@@ -61,7 +61,7 @@ class AVLTree {
     return root;
   }
 
-  private height(node) {
+  height(node) {
     return (node === null) ? -1 : node.height;
   }
 }

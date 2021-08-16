@@ -95,7 +95,7 @@ What are Heaps
   Operations
 
   Ex:
-  [10, 5, 17, 4, 12]
+  [10, 5, 17, 4, 22]
 
   Must satisfy the heap property.
 

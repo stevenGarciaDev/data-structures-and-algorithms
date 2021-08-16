@@ -86,6 +86,11 @@ O(2^n)
   exponential growth
   // opposite of Logarithmic
 
+  such as the powerset,
+
+    where upon every iterative or recursive call,
+      the size of the data to be operated on doubles 
+
 
 
 Space Complexity

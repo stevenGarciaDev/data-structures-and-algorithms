@@ -53,6 +53,8 @@ balanced and unbalanced trees
 
   height(left) - height(right) <= 1
 
+  // in terms of its absolute value
+
   A perfect tree is a tree where every level
   if full.
   (except for the last level)
@@ -302,7 +304,12 @@ AVL trees
   you begin calculating the height
   of the node that you just inserted.
 
-  ...
+  start with the node that you just added and calculate its balance factor
+    // the height of left subtree - the height of the right subtree
+
+  and keep calculating the balance factor up to the root
+
+  
 
 
 Exercise: AVL rotations

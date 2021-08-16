@@ -589,6 +589,9 @@ exercise - build a HashTable
 
   LinkedList[]
 
+    we want that dynamic size,
+    
+
   [LL, LL, LL]
   // SO every element is a linked list
 
